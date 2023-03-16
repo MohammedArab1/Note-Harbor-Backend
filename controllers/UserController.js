@@ -1,26 +1,28 @@
 import { User } from "../database/models/User.js";
-
+import bcrypt from "bcrypt"
+import { createToken } from "../utils/Generators.js";
 
 export const createUser = async (req,res) => {
   const { firstName, lastName, password, email } = req.body;
-  await User.findOne({email}).then((user) => {
-    if (user) {
-      res.status(401).json({error:'User already exists'})
-    }
-  })
+  const existingUser = await User.findOne({email})
+  if (existingUser) {
+    return res.status(401).json({error:'User already exists'})
+  }
   try {
+    const saltRounds = 10
+    const passwordHash = await bcrypt.hash(password,saltRounds)
     const newUser = new User({
       firstName,
       lastName,
-      password,
+      password:passwordHash,
       email
     })
     await newUser.save()
-    res.status(201).json(newUser);
+    const token = createToken(newUser)
+    res.status(200).send({registerSuccess:'success',token,newUser})
   } catch (error) {
     res.status(401).json({ error:error.message });
   }
-
-
 }
+
 

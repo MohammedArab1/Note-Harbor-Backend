@@ -1,20 +1,29 @@
-// const express = require('express')
 import express from 'express'
-// const cors = require('cors')
 import cors from 'cors'
-import UserRoutes from './routes/UserRoutes.js'
+import UserRouter from './routes/UserRouter.js'
+import LoginRouter from './routes/LoginRouter.js'
 import connectToDb from './database/connect.js'
+import { expressjwt } from 'express-jwt'
+import { getTokenFromHeader } from './utils/Generators.js'
+import errorHandler from './middleware/ErrorHandler.js'
 
 const app = express()
-
 app.use(express.json())
 app.use(cors())
-app.use('/api/user', UserRoutes)
+app.use(
+  expressjwt({
+    secret: process.env.SECRET,algorithms: ["HS256"],getToken: getTokenFromHeader
+  }).unless({ 
+    path: ["/api/user/register","/api/login"],
+  })
+)
+app.use('/api/user', UserRouter)
+app.use('/api/login', LoginRouter)
+app.use(errorHandler)
 
 app.get('/', (req, res) => {
   res.send("<h1>hi!</h1>")
 });
-
 
 const PORT = process.env.PORT || 3001
 try {
