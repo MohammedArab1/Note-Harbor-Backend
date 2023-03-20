@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import UserRouter from './routes/UserRouter.js'
 import LoginRouter from './routes/LoginRouter.js'
+import GroupRouter from './routes/GroupRouter.js'
 import connectToDb from './database/connect.js'
 import { expressjwt } from 'express-jwt'
 import { getTokenFromHeader } from './utils/Generators.js'
@@ -19,11 +20,10 @@ app.use(
 )
 app.use('/api/user', UserRouter)
 app.use('/api/login', LoginRouter)
+app.use('/api/group', GroupRouter)
 app.use(errorHandler)
 
-app.get('/', (req, res) => {
-  res.send("<h1>hi!</h1>")
-});
+
 
 const PORT = process.env.PORT || 3001
 try {

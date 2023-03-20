@@ -26,6 +26,14 @@ const UserSchema = new mongoose.Schema({
           message: props => `${props.value} is not a valid email address!`
       }
   },
+  groups: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Group',
+      default: [],
+      required: true
+    }
+  ]
 });
 
 
