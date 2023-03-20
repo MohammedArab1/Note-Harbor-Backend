@@ -5,7 +5,7 @@ export const createToken = (user) => {
     email:user.email,
     id:user._id
   }
-  const token = jwt.sign(userForToken, process.env.SECRET,{expiresIn:60*30})
+  const token = jwt.sign(userForToken, process.env.SECRET,{expiresIn:60*60})
   return token
 }
 
@@ -15,4 +15,14 @@ export const getTokenFromHeader = (request) => {
     return authorization.replace('Bearer ', '')
   }
   return null
+}
+
+export const generateAccessCode = () => {
+  var length = 8,
+      charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+      retVal = "";
+  for (var i = 0, n = charset.length; i < length; ++i) {
+      retVal += charset.charAt(Math.floor(Math.random() * n));
+  }
+  return retVal;
 }
