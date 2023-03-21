@@ -3,6 +3,7 @@ import cors from 'cors'
 import UserRouter from './routes/UserRouter.js'
 import LoginRouter from './routes/LoginRouter.js'
 import GroupRouter from './routes/GroupRouter.js'
+import ValidateRouter from './routes/ValidateRouter.js'
 import connectToDb from './database/connect.js'
 import { expressjwt } from 'express-jwt'
 import { getTokenFromHeader } from './utils/Generators.js'
@@ -15,12 +16,13 @@ app.use(
   expressjwt({
     secret: process.env.SECRET,algorithms: ["HS256"],getToken: getTokenFromHeader
   }).unless({ 
-    path: ["/api/user/register","/api/login"],
+    path: ["/api/user/register","/api/login","/api/validate"],
   })
 )
 app.use('/api/user', UserRouter)
 app.use('/api/login', LoginRouter)
 app.use('/api/group', GroupRouter)
+app.use('/api/validate', ValidateRouter)
 app.use(errorHandler)
 
 

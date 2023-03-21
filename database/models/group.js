@@ -27,7 +27,15 @@ const GroupSchema = new mongoose.Schema({
   groupName: {
     type: String,
     required: true,
-  }
+  },
+  // options:{
+  //   required:true,
+  //   type: [{
+  //     numOfDaysToPick: {type:Number,required:true},
+  //     recurring:{type:String,required:true},
+  //     minimumPeople:{type:Number, required:true}
+  //   }]
+  // }
 });
 
 

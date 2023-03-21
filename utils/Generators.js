@@ -5,7 +5,7 @@ export const createToken = (user) => {
     email:user.email,
     id:user._id
   }
-  const token = jwt.sign(userForToken, process.env.SECRET,{expiresIn:60*60})
+  const token = jwt.sign(userForToken, process.env.SECRET,{expiresIn:'7d'})
   return token
 }
 
@@ -16,6 +16,7 @@ export const getTokenFromHeader = (request) => {
   }
   return null
 }
+
 
 export const generateAccessCode = () => {
   var length = 8,
