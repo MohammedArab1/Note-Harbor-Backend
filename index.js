@@ -16,7 +16,7 @@ app.use(
   expressjwt({
     secret: process.env.SECRET,algorithms: ["HS256"],getToken: getTokenFromHeader
   }).unless({ 
-    path: ["/api/user/register","/api/login","/api/validate"],
+    path: ["/api/user/register","/api/login"],
   })
 )
 app.use('/api/user', UserRouter)

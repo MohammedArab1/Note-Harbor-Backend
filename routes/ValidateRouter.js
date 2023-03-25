@@ -4,10 +4,10 @@ import { getTokenFromHeader } from '../utils/Generators.js'
 
 const ValidateRouter = express.Router()
 
+//TODO remove this route
 ValidateRouter.get('/', async (req, res) => {
   const expired = isTokenExpired(getTokenFromHeader(req))
-  console.log(expired)
-  res.status(200).json({expired})
+  // res.status(200).json({"hi":"there"})
 })
 
 

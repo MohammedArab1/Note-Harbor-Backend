@@ -8,5 +8,6 @@ export const isTokenExpired = (token) => {
     if (error.message === "jwt expired") {
       return true
     }
+    return true
   }
 }
