@@ -1,8 +1,12 @@
 import { Group } from "../database/models/group.js";
-import { generateAccessCode } from "../utils/Generators.js";
+import { generateAccessCode, getTokenFromHeader } from "../utils/Generators.js";
+import jwt_decode from "jwt-decode";
+
 
 export const createGroup = async (req,res) => {
-  const {groupName, userId} = req.body;
+  const {groupName, description} = req.body;
+  const decodedToken = jwt_decode(getTokenFromHeader(req))
+  const userId = decodedToken.id
   const newGroup = new Group({
     members:[userId],
     active: true,
@@ -10,6 +14,9 @@ export const createGroup = async (req,res) => {
     accessCode:generateAccessCode(),
     leader:userId,
     groupName,
+    description,
+    meetups:[],
+    defaultOptions:[]
   })
   try {
     await newGroup.save()

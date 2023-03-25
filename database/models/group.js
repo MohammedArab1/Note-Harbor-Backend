@@ -28,6 +28,18 @@ const GroupSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+  },
+  meetups: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Meetup',
+    }
+  ],
+  defaultOptions: {
+    type:Array
+  }
   // options:{
   //   required:true,
   //   type: [{
