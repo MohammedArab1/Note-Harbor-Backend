@@ -19,7 +19,7 @@ export const getTokenFromHeader = (request) => {
 
 
 export const generateAccessCode = () => {
-  var length = 8,
+  var length = 12,
       charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
       retVal = "";
   for (var i = 0, n = charset.length; i < length; ++i) {

@@ -18,6 +18,7 @@ const GroupSchema = new mongoose.Schema({
   accessCode: {
     type: String,
     required: true,
+    unique: true
   },
   leader: {
     type: mongoose.Schema.Types.ObjectId,

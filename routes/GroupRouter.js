@@ -11,8 +11,8 @@ GroupRouter.get('/:id', async (req, res) => {
   await findGroupsPerUserId(req,res,req.params.id)
 })
 
-GroupRouter.put('/:id', async (req, res) => {
-  await addMemberToGroup(req,res,req.params.id)
+GroupRouter.put('/', async (req, res) => {
+  await addMemberToGroup(req,res)
 })
 
 
