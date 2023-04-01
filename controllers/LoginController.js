@@ -4,7 +4,7 @@ import { createToken } from "../utils/Generators.js";
 
 export const login = async (req,res) => {
   const { email,password} = req.body;
-  const existingUser = await User.findOne({email})
+  const existingUser = await User.findOne({email}).select('+password')
   const passwordCorrect = existingUser===null ? false : await bcrypt.compare(password, existingUser.password)
   if (!existingUser || !passwordCorrect) {
     return res.status(401).json({error:'invalid username or password'})

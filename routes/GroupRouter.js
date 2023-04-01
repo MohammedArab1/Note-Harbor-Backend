@@ -7,8 +7,8 @@ GroupRouter.post('/', async (req, res) => {
   await createGroup(req,res)
 })
 
-GroupRouter.get('/:id', async (req, res) => {
-  await findGroupsPerUserId(req,res,req.params.id)
+GroupRouter.get('/', async (req, res) => {
+  await findGroupsPerUserId(req,res)
 })
 
 GroupRouter.put('/', async (req, res) => {
