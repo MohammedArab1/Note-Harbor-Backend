@@ -40,6 +40,16 @@ export const findGroupsPerUserId = async (req,res) => {
   }
 }
 
+export const findGroupById = async (req,res) => {
+  try {
+    const groupId = req.params.groupId
+    const group = await Group.findById(groupId).populate('members').populate('leader')
+    return res.status(200).send({group})
+  } catch (error) {
+    return res.status(401).json({ error:error.message });
+  }
+}
+
 export const addMemberToGroup = async (req,res) => {
   const {accessCode} = req.body
   const newMemberId = req.auth.id
