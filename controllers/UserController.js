@@ -6,7 +6,7 @@ export const createUser = async (req,res) => {
   const { firstName, lastName, password, email } = req.body;
   const existingUser = await User.findOne({email})
   if (existingUser) {
-    return res.status(401).json({error:'User already exists'})
+    return res.status(400).json({error:'User already exists'})
   }
   try {
     const saltRounds = 10
@@ -21,7 +21,7 @@ export const createUser = async (req,res) => {
     const token = createToken(newUser)
     res.status(200).send({registerSuccess:'success',token,newUser})
   } catch (error) {
-    res.status(401).json({ error:error.message });
+    res.status(500).json({ error:error.message });
   }
 }
 

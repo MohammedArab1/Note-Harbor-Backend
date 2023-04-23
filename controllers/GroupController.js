@@ -26,7 +26,7 @@ export const createGroup = async (req,res) => {
     await newGroup.save()
     return res.status(200).send(newGroup)
   } catch (error) {
-    return res.status(401).json({ error:error.message });
+    return res.status(500).json({ error:error.message });
   }
 }
 
@@ -36,7 +36,7 @@ export const findGroupsPerUserId = async (req,res) => {
     const group = await Group.find({ members: userId}).populate('members').populate('leader')
     return res.status(200).send({group})
   } catch (error) {
-    return res.status(401).json({ error:error.message });
+    return res.status(500).json({ error:error.message });
   }
 }
 
@@ -46,7 +46,7 @@ export const findGroupById = async (req,res) => {
     const group = await Group.findById(groupId).populate('members').populate('leader')
     return res.status(200).send({group})
   } catch (error) {
-    return res.status(401).json({ error:error.message });
+    return res.status(500).json({ error:error.message });
   }
 }
 
@@ -55,10 +55,10 @@ export const addMemberToGroup = async (req,res) => {
   const newMemberId = req.auth.id
   const group = await Group.findOne({accessCode:accessCode})
   if (!group) {
-    return res.status(401).json({ error:"no group found with this access code." })
+    return res.status(400).json({ error:"no group found with this access code." })
   }
   else if (!newMemberId) {
-    return res.status(401).json({ error:"Could not create user, no member to add provided" })
+    return res.status(400).json({ error:"Could not add user to group, no member to add provided" })
   }
   const groupsBeforeAdding = group.members.length
   console.log("groupsBeforeAdding: ",group.members)
@@ -72,6 +72,6 @@ export const addMemberToGroup = async (req,res) => {
     await group.save()
     return res.status(200).send(group.populate('members').populate('leader'))
   } catch (error) {
-    return res.status(401).json({ error:error.message });
+    return res.status(500).json({ error:error.message });
   }
 }
