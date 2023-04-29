@@ -1,5 +1,5 @@
 import express from 'express'
-import { createGroup, findGroupsPerUserId, addMemberToGroup, findGroupById } from '../controllers/GroupController.js'
+import { createGroup, findGroupsPerUserId, addMemberToGroup, findGroupById, deleteGroup } from '../controllers/GroupController.js'
 
 const GroupRouter = express.Router()
 
@@ -17,6 +17,10 @@ GroupRouter.get('/:groupId', async (req, res) => {
 
 GroupRouter.put('/', async (req, res) => {
   await addMemberToGroup(req,res)
+})
+
+GroupRouter.delete('/:groupId', async (req, res) => {
+  await deleteGroup(req,res)
 })
 
 

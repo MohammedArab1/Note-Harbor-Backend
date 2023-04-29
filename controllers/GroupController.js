@@ -61,17 +61,28 @@ export const addMemberToGroup = async (req,res) => {
     return res.status(400).json({ error:"Could not add user to group, no member to add provided" })
   }
   const groupsBeforeAdding = group.members.length
-  console.log("groupsBeforeAdding: ",group.members)
-  console.log("newMemberId: ",newMemberId)
   try {
     group.members.addToSet(newMemberId)
-    console.log("groupsAfterAdding: ",group.members)
     if(groupsBeforeAdding === group.members.length) {
       throw new Error('User is already registered to group!');
     }
     await group.save()
-    return res.status(200).send(group.populate('members').populate('leader'))
+    return res.status(200).send(group)
   } catch (error) {
     return res.status(500).json({ error:error.message });
   }
 }
+
+export const deleteGroup = async (req,res) => {
+  try {
+    const deletedGroup = await Group.findByIdAndDelete(req.params.groupId)
+    if (!deletedGroup) {
+      return res.status(404).json({ error:"no group found with this id." })
+    }
+    console.log("group has been deleted")
+    return res.status(200).send(deletedGroup)
+  } catch (error) {
+    return res.status(500).json({ error:error.message });
+  }
+}
+
