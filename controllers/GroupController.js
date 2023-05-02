@@ -79,10 +79,23 @@ export const deleteGroup = async (req,res) => {
     if (!deletedGroup) {
       return res.status(404).json({ error:"no group found with this id." })
     }
-    console.log("group has been deleted")
     return res.status(200).send(deletedGroup)
   } catch (error) {
     return res.status(500).json({ error:error.message });
   }
 }
 
+export const removeMemberFromGroup = async (req,res) => {
+  const group = await Group.findById(req.params.groupId)
+  try {
+    group.members.pull(req.params.userId)
+    if (group.leader.toString()===req.params.userId) {
+      const newLeader = group.members[Math.floor(Math.random() * group.members.length)];
+      group.leader = newLeader
+    }
+    await group.save()
+    return res.status(200).send(group)
+  } catch (error) {
+    return res.status(500).json({ error:error.message });
+  }
+}
