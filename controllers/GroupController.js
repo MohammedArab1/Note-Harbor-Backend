@@ -85,17 +85,14 @@ export const deleteGroup = async (req,res) => {
   }
 }
 
-export const removeMemberFromGroup = async (req,res) => {
-  const group = await Group.findById(req.params.groupId)
-  try {
-    group.members.pull(req.params.userId)
-    if (group.leader.toString()===req.params.userId) {
-      const newLeader = group.members[Math.floor(Math.random() * group.members.length)];
-      group.leader = newLeader
-    }
-    await group.save()
-    return res.status(200).send(group)
+export const updateGroup = async (req,res) => {
+  var oldGroup = await Group.findById(req.params.groupId)
+  try{
+    Object.assign(oldGroup, req.body);
+    await oldGroup.save();
+    res.status(200).json(oldGroup)
   } catch (error) {
     return res.status(500).json({ error:error.message });
   }
+  
 }
