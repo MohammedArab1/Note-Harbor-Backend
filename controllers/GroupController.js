@@ -77,7 +77,7 @@ export const deleteGroup = async (req,res) => {
   try {
     const deletedGroup = await Group.findByIdAndDelete(req.params.groupId)
     if (!deletedGroup) {
-      return res.status(404).json({ error:"no group found with this id." })
+      return res.status(404).json({ error:"No group found with this id." })
     }
     return res.status(200).send(deletedGroup)
   } catch (error) {
