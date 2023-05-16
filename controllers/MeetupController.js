@@ -3,10 +3,11 @@ import { Meetup } from "../database/models/meetup.js";
 
 
 export const createMeetup = async (req,res) => {
-    const { group,deadLine,location,name,description,dateToPickFrom,dateToPickTo,minPplNeeded,numOfDatesToPick } = req.body;
+    console.log("in create meetup, req.body is:", req.body)
+    const { groupId,deadLine,location,name,description,dateToPickFrom,dateToPickTo,minPplNeeded,numOfDatesToPick } = req.body;
     const active = true
     const creationDate = Date.now()
-    const meetup = new Meetup({group,deadLine,active,creationDate,location,name,description,dateToPickFrom,dateToPickTo,minPplNeeded,numOfDatesToPick})
+    const meetup = new Meetup({group:groupId,deadLine,active,creationDate,location,name,description,dateToPickFrom,dateToPickTo,minPplNeeded,numOfDatesToPick})
     await meetup.save()
     res.status(201).json(meetup)
 }
