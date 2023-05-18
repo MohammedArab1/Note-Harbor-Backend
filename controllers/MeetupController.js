@@ -3,7 +3,6 @@ import { Meetup } from "../database/models/meetup.js";
 
 
 export const createMeetup = async (req,res) => {
-    console.log("in create meetup, req.body is:", req.body)
     const { groupId,deadLine,location,name,description,dateToPickFrom,dateToPickTo,minPplNeeded,numOfDatesToPick } = req.body;
     const active = true
     const creationDate = Date.now()
@@ -24,4 +23,17 @@ export const deleteMeetup = async (req,res) => {
         }
     }
 
+export const getMeetupByGroupId = async (req,res, next) => {
+    try {
+        const meetup = await Meetup.find({group:req.params.groupId})
+        if (!meetup) {
+            return res.status(404).json({ error:"No meetup found with this group id." })
+        }
+        return res.status(200).send(meetup)
+    } catch (error) {
+        //if error caught, send to error handler middleware
+        next(error);
+        // return res.status(500).json({ error:error.message });
+    }
+}
 
