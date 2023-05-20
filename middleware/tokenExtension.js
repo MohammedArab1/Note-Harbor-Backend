@@ -1,6 +1,6 @@
 import { getTokenFromHeader } from "../utils/Generators.js"
 import { isTokenExpired } from "../utils/Utils.js"
-import {User} from "../database/models/User.js"
+import {User} from "../database/models/user.js"
 import jwt from "jsonwebtoken";
 
 

@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt"
-import { User } from "../database/models/User.js";
+import { User } from "../database/models/user.js";
 import { createToken } from "../utils/Generators.js";
 
 export const login = async (req,res) => {
