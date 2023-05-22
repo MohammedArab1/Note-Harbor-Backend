@@ -11,7 +11,10 @@ const errorHandler = (error, request, response, next) => {
   } else if (error.name === 'TokenExpiredError') {
     return response.status(401).json({error: 'token expired'})
   } 
-  next(error)
+  else {
+    return response.status(500).json({ error:error.message });
+  }
+  // next(error)
 }
 
 export default errorHandler

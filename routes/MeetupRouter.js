@@ -4,16 +4,29 @@ import { createMeetup, deleteMeetup, getMeetupByGroupId } from '../controllers/M
 
 const MeetupRouter = express.Router()
 
-MeetupRouter.post('/', async (req, res) => {
-  await createMeetup(req,res)
-})
+MeetupRouter.post('/', async (req, res, next) => {
+  try {
+    await createMeetup(req,res)
+  } catch (error) {
+    next(error);
+  }
+  })
 
-MeetupRouter.delete('/:meetupId', async (req, res) => {
-  await deleteMeetup(req,res)
+MeetupRouter.delete('/:meetupId', async (req, res, next) => {
+  //wrap in try catch block
+  try {
+    await deleteMeetup(req,res)
+  } catch (error) {
+    next(error);
+  }
 })
 
 MeetupRouter.get('/:groupId', async (req, res, next) => {
-  await getMeetupByGroupId(req,res, next)
+  try {
+    await getMeetupByGroupId(req,res)
+  } catch (error) {
+    next(error);
+  }
 })
 
 export default MeetupRouter

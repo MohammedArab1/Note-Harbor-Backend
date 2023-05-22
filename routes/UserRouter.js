@@ -4,9 +4,13 @@ import { createUser } from '../controllers/UserController.js'
 
 const UserRouter = express.Router()
 
-UserRouter.post('/register', async (req, res) => {
-  await createUser(req,res)
-})
+UserRouter.post('/register', async (req, res,next) => {
+  try {
+    await createUser(req,res)
+  } catch (error) {
+    next(error);
+  }
+  })
 
 UserRouter.get('/', async (req, res) => {
   const users = await User.find({})
