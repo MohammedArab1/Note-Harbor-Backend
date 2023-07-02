@@ -45,6 +45,8 @@ const GroupSchema = new mongoose.Schema({
 
 
 GroupSchema.pre('save', async function (next) {
+  const thisMembers = this.members;
+  const oldGroupMembers = await this.constructor.findById(this._id).members;
   if (this.isNew) {
     this._oldMembers = [];
   } else {

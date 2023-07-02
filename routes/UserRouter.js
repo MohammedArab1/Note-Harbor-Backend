@@ -12,9 +12,13 @@ UserRouter.post('/register', async (req, res,next) => {
   }
   })
 
-UserRouter.get('/', async (req, res) => {
-  const users = await User.find({})
-  res.status(201).json(users)
+UserRouter.get('/', async (req, res, next) => {
+  try {
+    const users = await User.find({})
+    res.status(201).json(users)
+  } catch (error) {
+    next(error);
+  }
 })
 
 

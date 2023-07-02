@@ -4,8 +4,12 @@ import { login } from '../controllers/LoginController.js'
 
 const LoginRouter = express.Router()
 
-LoginRouter.post('/', async (req, res) => {
-  await login(req,res)
+LoginRouter.post('/', async (req, res, next) => {
+  try {
+    await login(req,res)
+  } catch (error) {
+    next(error);
+  }
 })
 
 export default LoginRouter

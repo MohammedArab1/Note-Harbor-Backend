@@ -13,7 +13,6 @@ MeetupRouter.post('/', async (req, res, next) => {
   })
 
 MeetupRouter.delete('/:meetupId', async (req, res, next) => {
-  //wrap in try catch block
   try {
     await deleteMeetup(req,res)
   } catch (error) {

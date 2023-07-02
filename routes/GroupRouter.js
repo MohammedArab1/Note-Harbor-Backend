@@ -3,16 +3,28 @@ import { createGroup, findGroupsPerUserId, addMemberToGroup, findGroupById, dele
 
 const GroupRouter = express.Router()
 
-GroupRouter.post('/', async (req, res) => {
-  await createGroup(req,res)
+GroupRouter.post('/', async (req, res,next) => {
+  try{
+    await createGroup(req,res)
+  } catch (error) {
+    next(error);
+  }
 })
 
-GroupRouter.get('/', async (req, res) => {
-  await findGroupsPerUserId(req,res)
+GroupRouter.get('/', async (req, res, next) => {
+  try {
+    await findGroupsPerUserId(req,res)
+  } catch (error) {
+    next(error);
+  }
 })
 
-GroupRouter.get('/:groupId', async (req, res) => {
-  await findGroupById(req,res)
+GroupRouter.get('/:groupId', async (req, res, next) => {
+  try {
+    await findGroupById(req,res)
+  } catch (error) {
+    next(error);
+  }
 })
 
 GroupRouter.put('/', async (req, res) => {
