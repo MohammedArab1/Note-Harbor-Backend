@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-const GroupSchema = new mongoose.Schema({
+const ProjectSchema = new mongoose.Schema({
   members: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -11,7 +11,7 @@ const GroupSchema = new mongoose.Schema({
     type: Boolean, 
     required: true
   },
-  lastInitiationDate: { 
+  creationDate: { 
     type: Date, 
     required: true
   },
@@ -25,7 +25,7 @@ const GroupSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  groupName: {
+  projectName: {
     type: String,
     required: true,
   },
@@ -35,16 +35,43 @@ const GroupSchema = new mongoose.Schema({
   meetups: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Meetup',
+      ref: 'SubSection',
+      required: false,
+      default: []
     }
   ],
-  defaultOptions: {
-    type:Array
-  }
+  notes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Note',
+      required: false,
+      default: []
+    }
+  ],
+  private: { 
+    type: Boolean, 
+    required: true
+  },
+  sources: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Source',
+      required: false,
+      default: []
+    }
+  ],
+  tags: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Tag',
+      required: false,
+      default: []
+    }
+  ]
 });
 
 
-GroupSchema.pre('save', async function (next) {
+ProjectSchema.pre('save', async function (next) {
   const thisMembers = this.members;
   const oldGroupMembers = await this.constructor.findById(this._id).members;
   if (this.isNew) {
@@ -56,7 +83,7 @@ GroupSchema.pre('save', async function (next) {
   next();
 });
 
-GroupSchema.post('save', async function (doc, next) {
+ProjectSchema.post('save', async function (doc, next) {
   const User = mongoose.model('User');
   
   // Users who joined the group
@@ -67,14 +94,14 @@ GroupSchema.post('save', async function (doc, next) {
   if (usersJoined.length > 0) {
     await User.updateMany(
       { _id: { $in: usersJoined } },
-      { $addToSet: { groups: this._id } }
+      { $addToSet: { projects: this._id } }
     );
   }
 
   if (usersLeft.length > 0) {
     await User.updateMany(
       { _id: { $in: usersLeft } },
-      { $pull: { groups: this._id } }
+      { $pull: { projects: this._id } }
     );
   }
 
@@ -82,4 +109,4 @@ GroupSchema.post('save', async function (doc, next) {
 });
 
 
-export const Group = mongoose.model("Group", GroupSchema);
+export const Project = mongoose.model("Project", ProjectSchema);

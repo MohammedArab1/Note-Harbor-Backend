@@ -6,10 +6,24 @@ const CommentSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  commentValue: {
+  content: {
     type: String,
     required: true
-  }
+  },
+  dateCreated: {
+    type: Date,
+    required: true,
+    default: Date.now
+  },
+  dateUpdated: {
+    type: Date,
+    required: false
+  },
+  note: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Note',
+    required: true
+  },
 });
 
 

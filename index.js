@@ -2,8 +2,8 @@ import express from 'express'
 import cors from 'cors'
 import UserRouter from './routes/UserRouter.js'
 import LoginRouter from './routes/LoginRouter.js'
-import GroupRouter from './routes/GroupRouter.js'
-import MeetupRouter from './routes/MeetupRouter.js'
+import ProjectRouter from './routes/ProjectRouter.js'
+import SubSectionRouter from './routes/SubSectionRouter.js'
 import connectToDb from './database/connect.js'
 import { expressjwt } from 'express-jwt'
 import { getTokenFromHeader } from './utils/Generators.js'
@@ -21,8 +21,8 @@ app.use(
 )
 app.use('/api/user', UserRouter)
 app.use('/api/login', LoginRouter)
-app.use('/api/group', GroupRouter)
-app.use('/api/meetup', MeetupRouter)
+app.use('/api/project', ProjectRouter)
+app.use('/api/subsection', SubSectionRouter)
 app.use(errorHandler)
 
 
