@@ -9,7 +9,7 @@ export const createProject = async (req,res) => {
   var existingProject = await Project.findOne({accessCode:accessCode})
   while (existingProject){
     accessCode = generateAccessCode()
-    existingProject = await Group.findOne({accessCode:accessCode})
+    existingProject = await Project.findOne({accessCode:accessCode})
   }
   const newProject = new Project({
     members:[userId],
@@ -19,7 +19,7 @@ export const createProject = async (req,res) => {
     leader:userId,
     projectName,
     description,
-    meetups:[],
+    subsections:[],
     notes:[],
     private:isPrivate,
     sources:[],
@@ -61,13 +61,13 @@ export const addMemberToProject = async (req,res) => {
     return res.status(400).json({ error:"no project found with this access code." })
   }
   else if (!newMemberId) {
-    return res.status(400).json({ error:"Could not add user to group, no member to add provided" })
+    return res.status(400).json({ error:"Could not add user to Project, no member to add provided" })
   }
   const projectBeforeAdding = project.members.length
   try {
     project.members.addToSet(newMemberId)
     if(projectBeforeAdding === project.members.length) {
-      throw new Error('User is already registered to group!');
+      throw new Error('User is already registered to Project!');
     }
     await project.save()
     return res.status(200).send(project)

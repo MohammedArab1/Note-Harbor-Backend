@@ -1,4 +1,4 @@
-import { SubSection } from "../database/models/subSection";
+import { SubSection } from "../database/models/subSection.js";
 
 
 export const createSubSection = async (req,res) => {

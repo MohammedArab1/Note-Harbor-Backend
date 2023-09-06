@@ -12,7 +12,7 @@ SubSectionRouter.post('/', async (req, res, next) => {
   }
   })
 
-SubSectionRouter.delete('/:meetupId', async (req, res, next) => {
+SubSectionRouter.delete('/:subSectionId', async (req, res, next) => {
   try {
     await deleteSubSection(req,res)
   } catch (error) {
@@ -20,7 +20,7 @@ SubSectionRouter.delete('/:meetupId', async (req, res, next) => {
   }
 })
 
-SubSectionRouter.get('/:groupId', async (req, res, next) => {
+SubSectionRouter.get('/:projectId', async (req, res, next) => {
   try {
     await getSubSectionByProjectId(req,res)
   } catch (error) {

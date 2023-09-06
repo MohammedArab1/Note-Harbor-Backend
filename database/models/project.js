@@ -32,7 +32,7 @@ const ProjectSchema = new mongoose.Schema({
   description: {
     type: String,
   },
-  meetups: [
+  subsections: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'SubSection',
@@ -73,12 +73,12 @@ const ProjectSchema = new mongoose.Schema({
 
 ProjectSchema.pre('save', async function (next) {
   const thisMembers = this.members;
-  const oldGroupMembers = await this.constructor.findById(this._id).members;
+  const oldProjectMembers = await this.constructor.findById(this._id).members;
   if (this.isNew) {
     this._oldMembers = [];
   } else {
-    const oldGroup = await this.constructor.findById(this._id);
-    this._oldMembers = oldGroup.members;
+    const oldProject = await this.constructor.findById(this._id);
+    this._oldMembers = oldProject.members;
   }
   next();
 });
@@ -86,9 +86,9 @@ ProjectSchema.pre('save', async function (next) {
 ProjectSchema.post('save', async function (doc, next) {
   const User = mongoose.model('User');
   
-  // Users who joined the group
+  // Users who joined the project
   const usersJoined = this.members.filter(m => !this._oldMembers.includes(m));
-  // Users who left the group
+  // Users who left the project
   const usersLeft = this._oldMembers.filter(m => !this.members.includes(m));
 
   if (usersJoined.length > 0) {
