@@ -1,6 +1,14 @@
 import mongoose from 'mongoose';
 
 const NoteSchema = new mongoose.Schema({
+	project: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Project',
+	},
+	subSection: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'SubSection',
+	},
     user: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User',
@@ -17,26 +25,13 @@ const NoteSchema = new mongoose.Schema({
     },
     dateUpdated: {
         type: Date,
-        required: false
     },
-	comments: [{
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Comment',
-		required: false,
-        default: []
-	}],
-    sources: [{
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Source',
-		required: false,
-        default: []
-	}],
-    tags: [{
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Tag',
-		required: false,
-        default: []
-	}]
 });
 
+//Middleware that makes sure that only one of the two following fields is populated: project, subsection
+NoteSchema.pre('validate', function (next) {
+    if((this.project && this.subSection) || (!this.project && !this.subSection))
+        return next(new Error("At least and only one field (project, subsection) should be populated"))
+    next()
+})
 export const Note = mongoose.model('Note', NoteSchema);

@@ -17,8 +17,9 @@ export const deleteSubSection = async (req,res) => {
     }
 
 export const getSubSectionByProjectId = async (req,res) => {
+    console.log("getting subsections")
     const subsection = await SubSection.find({project:req.params.projectId})
-    if (!subsection) {
+    if (!subsection || subsection.length === 0) {
         return res.status(404).json({ error:"No subsection found with this project id." })
     }
     return res.status(200).send(subsection)

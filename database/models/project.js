@@ -7,10 +7,6 @@ const ProjectSchema = new mongoose.Schema({
       ref: 'User',
     }
   ],
-  active: { 
-    type: Boolean, 
-    required: true
-  },
   creationDate: { 
     type: Date, 
     required: true
@@ -32,42 +28,10 @@ const ProjectSchema = new mongoose.Schema({
   description: {
     type: String,
   },
-  subsections: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'SubSection',
-      required: false,
-      default: []
-    }
-  ],
-  notes: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Note',
-      required: false,
-      default: []
-    }
-  ],
   private: { 
     type: Boolean, 
     required: true
   },
-  sources: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Source',
-      required: false,
-      default: []
-    }
-  ],
-  tags: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Tag',
-      required: false,
-      default: []
-    }
-  ]
 });
 
 

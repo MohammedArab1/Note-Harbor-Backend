@@ -1,6 +1,11 @@
 import mongoose from 'mongoose';
 
 const TagSchema = new mongoose.Schema({
+	project: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Project',
+		required: true
+	},
 	tagName: {
 		type: String,
 		required: true,
@@ -8,7 +13,6 @@ const TagSchema = new mongoose.Schema({
 	notes: [{
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Note',
-		required: false,
 		default: [],
 	}],
 	colour: {

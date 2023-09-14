@@ -13,12 +13,6 @@ const SubSectionSchema = new mongoose.Schema({
   description:{
     type: String,
   },
-  notes: [{
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Note',
-		required: false,
-		default: [],
-	}]
 });
 
 

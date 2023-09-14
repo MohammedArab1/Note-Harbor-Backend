@@ -10,6 +10,10 @@ const CommentSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  inReplyTo: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Comment',
+  },
   dateCreated: {
     type: Date,
     required: true,
@@ -17,7 +21,6 @@ const CommentSchema = new mongoose.Schema({
   },
   dateUpdated: {
     type: Date,
-    required: false
   },
   note: {
     type: mongoose.Schema.Types.ObjectId,

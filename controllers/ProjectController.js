@@ -13,17 +13,12 @@ export const createProject = async (req,res) => {
   }
   const newProject = new Project({
     members:[userId],
-    active: true,
     creationDate: Date.now(),
     accessCode:accessCode, 
     leader:userId,
     projectName,
     description,
-    subsections:[],
-    notes:[],
     private:isPrivate,
-    sources:[],
-    tags:[]
   })
   try {
     await newProject.save()
@@ -77,6 +72,7 @@ export const addMemberToProject = async (req,res) => {
 }
 
 export const deleteProject = async (req,res) => {
+  //Will also have to delete all notes, subsections, sources, and tags associated with this project (put this in middleware though)
   try {
     const deletedProject = await Project.findByIdAndDelete(req.params.projectId)
     if (!deletedProject) {

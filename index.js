@@ -4,6 +4,9 @@ import UserRouter from './routes/UserRouter.js'
 import LoginRouter from './routes/LoginRouter.js'
 import ProjectRouter from './routes/ProjectRouter.js'
 import SubSectionRouter from './routes/SubSectionRouter.js'
+import NoteRouter from './routes/NoteRouter.js'
+import SourceRouter from './routes/SourceRouter.js'
+import TagRouter from './routes/TagRouter.js'
 import connectToDb from './database/connect.js'
 import { expressjwt } from 'express-jwt'
 import { getTokenFromHeader } from './utils/Generators.js'
@@ -23,6 +26,9 @@ app.use('/api/user', UserRouter)
 app.use('/api/login', LoginRouter)
 app.use('/api/project', ProjectRouter)
 app.use('/api/subsection', SubSectionRouter)
+app.use('/api/note', NoteRouter)
+app.use('/api/source', SourceRouter)
+app.use('/api/tag', TagRouter)
 app.use(errorHandler)
 
 
