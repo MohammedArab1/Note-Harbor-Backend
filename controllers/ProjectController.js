@@ -1,5 +1,11 @@
 import { Project } from "../database/models/project.js";
 import { generateAccessCode } from "../utils/Generators.js";
+import mongoose from "mongoose";
+import { User } from "../database/models/user.js";
+import { SubSection } from "../database/models/subSection.js";
+import { Tag } from "../database/models/tag.js";
+import { Source } from "../database/models/source.js";
+import { Note } from "../database/models/note.js";
 
 
 export const createProject = async (req,res) => {
@@ -73,13 +79,37 @@ export const addMemberToProject = async (req,res) => {
 
 export const deleteProject = async (req,res) => {
   //Will also have to delete all notes, subsections, sources, and tags associated with this project (put this in middleware though)
+  const projectId = req.params.projectId
+  const session = await mongoose.startSession();
+	session.startTransaction();
   try {
-    const deletedProject = await Project.findByIdAndDelete(req.params.projectId)
-    if (!deletedProject) {
-      return res.status(404).json({ error:"No project found with this id." })
+    //First make sure that project exists
+    const project = await Project.findOne({ _id: projectId },null,{ session});
+    if (!project) {
+      throw new Error('Project does not exist!');
     }
+
+		//then have to update the projects array in the User model to no longer hold this project
+    await User.updateOne({ projects: { $in: projectId } }, { $pull: { projects: { $in: projectId } } }, { session });
+    //then have to delete the appropriate subsections
+    await SubSection.deleteMany({project:projectId}, { session });
+    //then have to delete the appropriate tags
+    await Tag.deleteMany({project:projectId}, { session });
+    //then have to delete the appropriate sources
+    await Source.deleteMany({project:projectId}, { session });
+    //then have to delete the appropriate Notes
+    await Note.deleteMany({project:projectId}, { session });
+    //finally delete the actual project
+    const deletedProject = await Project.deleteOne({_id:projectId}, {session})
+
+
+    await session.commitTransaction();
+		session.endSession();
+
     return res.status(200).send(deletedProject)
   } catch (error) {
+    await session.abortTransaction();
+		session.endSession();
     return res.status(500).json({ error:error.message });
   }
 }

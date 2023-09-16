@@ -11,7 +11,7 @@ NoteRouter.post('/', async (req, res, next) => {
 	}
 });
 
-NoteRouter.delete('/:noteId', async (req, res, next) => {
+NoteRouter.post('/deleteMany', async (req, res, next) => {
 	try {
 		await deleteNote(req,res)
 	} catch (error) {

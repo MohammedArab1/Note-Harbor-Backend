@@ -1,6 +1,8 @@
+import { Comment } from '../database/models/comment.js';
 import { Note } from '../database/models/note.js';
 import { Source } from '../database/models/source.js';
 import { Tag } from '../database/models/tag.js';
+import { mongoose } from 'mongoose';
 
 export const createNote = async (req, res) => {
 	const { projectId,subSectionId, content } = req.body;
@@ -18,11 +20,28 @@ export const createNote = async (req, res) => {
 };
 
 export const deleteNote = async (req, res) => {
-	const deletedNote = await Note.findByIdAndDelete(req.params.noteId);
-    if (!deletedNote) {
-		//Don't think 404 is the right error code here
-		return res.status(404).json({ error: 'No Note found with this id.' });
+	const { noteIds } = req.body;
+	const session = await mongoose.startSession();
+	session.startTransaction();
+	try {
+		//Have to delete appropriate comments first
+		await Comment.deleteMany({note: { $in: noteIds}}, { session });
+		//Then have to update the notes array in the Tag model to no longer hold this note(s)
+		await Tag.updateMany({ notes: { $in: noteIds } }, { $pull: { notes: { $in: noteIds } } }, { session });
+		//Then have to update the notes array in the Source model to no longer hold this note(s)
+		await Source.updateMany({ notes: { $in: noteIds } }, { $pull: { notes: { $in: noteIds } } }, { session });
+		//Then we delete the actual notes
+		const deletedNote = await Note.deleteMany({ _id: { $in: noteIds } }, { session });
+
+		await session.commitTransaction();
+		session.endSession();
+
+
+		return res.status(200).send(deletedNote);
+	} catch (error) {
+		await session.abortTransaction();
+		session.endSession();
+		return res.status(500).json({ error });
 	}
-	return res.status(200).send(deletedNote);
 
 };

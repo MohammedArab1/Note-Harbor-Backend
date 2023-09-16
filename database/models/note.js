@@ -34,4 +34,5 @@ NoteSchema.pre('validate', function (next) {
         return next(new Error("At least and only one field (project, subsection) should be populated"))
     next()
 })
+
 export const Note = mongoose.model('Note', NoteSchema);

@@ -7,6 +7,7 @@ import SubSectionRouter from './routes/SubSectionRouter.js'
 import NoteRouter from './routes/NoteRouter.js'
 import SourceRouter from './routes/SourceRouter.js'
 import TagRouter from './routes/TagRouter.js'
+import CommentRouter from './routes/CommentRouter.js'
 import connectToDb from './database/connect.js'
 import { expressjwt } from 'express-jwt'
 import { getTokenFromHeader } from './utils/Generators.js'
@@ -29,6 +30,7 @@ app.use('/api/subsection', SubSectionRouter)
 app.use('/api/note', NoteRouter)
 app.use('/api/source', SourceRouter)
 app.use('/api/tag', TagRouter)
+app.use('/api/comment', CommentRouter)
 app.use(errorHandler)
 
 
