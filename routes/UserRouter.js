@@ -1,6 +1,6 @@
 import express from 'express'
 import { User } from '../database/models/user.js'
-import { createUser } from '../controllers/UserController.js'
+import { createUser, deleteUser } from '../controllers/UserController.js'
 
 const UserRouter = express.Router()
 
@@ -16,6 +16,14 @@ UserRouter.get('/', async (req, res, next) => {
   try {
     const users = await User.find({})
     res.status(201).json(users)
+  } catch (error) {
+    next(error);
+  }
+})
+
+UserRouter.delete('/', async (req, res, next) => {
+  try {
+    await deleteUser(req,res)
   } catch (error) {
     next(error);
   }
