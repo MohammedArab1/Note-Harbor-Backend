@@ -1,6 +1,5 @@
 import { SubSection } from "../database/models/subSection.js";
-import { Note } from "../database/models/note.js";
-import { Comment } from "../database/models/comment.js";
+import { deleteSubSectionService } from "./service/subSectionService.js";
 import mongoose from "mongoose";
 
 export const createSubSection = async (req,res) => {
@@ -20,16 +19,7 @@ export const deleteSubSection = async (req,res) => {
             if (!subsection) {
                 throw new Error('subsection does not exist!');
             }
-            //Find all the notes that have this subsection in the subsection field
-            const notes = await Note.find( {subSection: subSectionId}, null, { session });
-            const noteIds = notes.map(note => note._id);
-            // Delete all comments that have these notes to be deleted
-            await Comment.deleteMany({note: {$in: noteIds}}, { session });
-            //then have to delete the appropriate Notes
-            await Note.deleteMany({subSection: subSectionId},{ session });
-            //Finally delete the appropriate subsection
-            const deletedSubsection = await SubSection.deleteMany({ _id: subSectionId}, { session });
-
+            const deletedSubsection=await deleteSubSectionService([subSectionId], session);
             await session.commitTransaction();
             session.endSession();
             return res.status(200).send(deletedSubsection)
@@ -42,11 +32,7 @@ export const deleteSubSection = async (req,res) => {
     }
 
 export const getSubSectionByProjectId = async (req,res) => {
-    console.log("getting subsections")
     const subsection = await SubSection.find({project:req.params.projectId})
-    if (!subsection || subsection.length === 0) {
-        return res.status(404).json({ error:"No subsection found with this project id." })
-    }
     return res.status(200).send(subsection)
 }
 

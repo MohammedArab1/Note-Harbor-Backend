@@ -94,46 +94,6 @@ export const deleteProject = async (req,res) => {
     session.endSession();
     return res.status(500).json({ error:error.message });
   }
-  // try {
-  //   //First make sure that project exists
-  //   const project = await Project.findOne({ _id: projectId },null,{ session});
-  //   if (!project) {
-  //     throw new Error('Project does not exist!');
-  //   }
-
-	// 	//First have to update the projects array in the User model to no longer hold this project
-  //   await User.updateOne({ projects: { $in: projectId } }, { $pull: { projects: { $in: projectId } } }, { session });
-  //   //Then have to fetch all subsections to be deleted
-  //   const subsections = await SubSection.find({project:projectId},null, { session });
-  //   // Extract the ids of these subsections. Will be used later
-  //   const subSectionIds = subsections.map(subsection => subsection._id);
-  //   //then have to delete the appropriate subsections
-  //   await SubSection.deleteMany({project:projectId}, { session });
-  //   //then have to delete the appropriate tags
-  //   await Tag.deleteMany({project:projectId}, { session });
-  //   //then have to delete the appropriate sources
-  //   await Source.deleteMany({project:projectId}, { session });
-  //   // Get all notes associated with the project to be deleted or with any of the subsections to be deleted
-  //   const notes = await Note.find({$or: [{project: projectId}, {subSection: {$in: subSectionIds}}]}, null, { session });
-  //   // Extract the ids of these notes
-  //   const noteIds = notes.map(note => note._id);
-  //   // Delete all comments that have these notes to be deleted
-  //   await Comment.deleteMany({note: {$in: noteIds}}, { session });
-  //   //then have to delete the appropriate Notes
-  //   await Note.deleteMany({$or: [{project: projectId}, {subSection: {$in: subSectionIds}}]}, { session });
-  //   //finally delete the actual project
-  //   const deletedProject = await Project.deleteOne({_id:projectId}, {session})
-
-
-  //   await session.commitTransaction();
-	// 	session.endSession();
-
-  //   return res.status(200).send(deletedProject)
-  // } catch (error) {
-    // await session.abortTransaction();
-		// session.endSession();
-  //   return res.status(500).json({ error:error.message });
-  // }
 }
 
 export const updateProject = async (req,res) => {

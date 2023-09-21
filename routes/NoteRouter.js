@@ -1,5 +1,5 @@
 import express from 'express';
-import { createNote, deleteNote } from '../controllers/NoteController.js';
+import { createNote, deleteNote, getNoteByProjectId } from '../controllers/NoteController.js';
 
 const NoteRouter = express.Router();
 
@@ -14,6 +14,14 @@ NoteRouter.post('/', async (req, res, next) => {
 NoteRouter.post('/deleteMany', async (req, res, next) => {
 	try {
 		await deleteNote(req,res)
+	} catch (error) {
+		next(error);
+	}
+})
+
+NoteRouter.get('/project/:projectId', async (req, res, next) => {
+	try {
+		await getNoteByProjectId(req, res);
 	} catch (error) {
 		next(error);
 	}
