@@ -1,7 +1,4 @@
-import { Comment } from '../database/models/comment.js';
 import { Note } from '../database/models/note.js';
-import { Source } from '../database/models/source.js';
-import { Tag } from '../database/models/tag.js';
 import { mongoose } from 'mongoose';
 import { deleteNoteService } from './service/noteService.js';
 
@@ -40,6 +37,16 @@ export const getNoteByProjectId = async (req, res) => {
 	const { projectId } = req.params;
 	try {
 		const notes = await Note.find({ project: projectId }).populate('user');
+		return res.status(200).send(notes);
+	} catch (error) {
+		return res.status(500).json({ error: error.message });
+	}
+};
+
+export const getNoteBySubSectionId = async (req, res) => {
+	const { subSectionId } = req.params;
+	try {
+		const notes = await Note.find({ subSection: subSectionId }).populate('user');
 		return res.status(200).send(notes);
 	} catch (error) {
 		return res.status(500).json({ error: error.message });

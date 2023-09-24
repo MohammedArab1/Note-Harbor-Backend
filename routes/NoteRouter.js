@@ -1,5 +1,5 @@
 import express from 'express';
-import { createNote, deleteNote, getNoteByProjectId } from '../controllers/NoteController.js';
+import { createNote, deleteNote, getNoteByProjectId, getNoteBySubSectionId } from '../controllers/NoteController.js';
 
 const NoteRouter = express.Router();
 
@@ -22,6 +22,14 @@ NoteRouter.post('/deleteMany', async (req, res, next) => {
 NoteRouter.get('/project/:projectId', async (req, res, next) => {
 	try {
 		await getNoteByProjectId(req, res);
+	} catch (error) {
+		next(error);
+	}
+})
+
+NoteRouter.get('/subsection/:subSectionId', async (req, res, next) => {
+	try {
+		await getNoteBySubSectionId(req, res);
 	} catch (error) {
 		next(error);
 	}
