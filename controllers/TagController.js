@@ -27,8 +27,6 @@ export const findTagsPerProjectId = async (req,res) => {
 export const deleteTagByTagId = async (req,res) => {
 	try {
 		const tagId = req.params.tagId
-		// const tags = await Tag.find({ project: projectId})
-		// await Comment.deleteMany({note: { $in: noteIds}}, { session });
 		const deletedTag = await Tag.deleteOne({_id:tagId})
 		return res.status(200).send({deletedTag})
 	} catch (error) {

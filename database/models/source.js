@@ -13,11 +13,11 @@ const SourceSchema = new mongoose.Schema({
 	additionalSourceInformation: {
 		type: String,
 	},
-	notes: [{
+	note: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Note',
-		default: []
-	}]
+		required: true
+	}
 });
 
 export const Source = mongoose.model('Source', SourceSchema);
