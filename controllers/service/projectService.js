@@ -27,7 +27,7 @@ export const deleteProjectService = async (projectId, session) => {
     //then have to delete the appropriate tags
     await Tag.deleteMany({project:projectId}, { session });
     //then have to delete the appropriate sources
-    await Source.deleteMany({project:projectId}, { session });
+    // await Source.deleteMany({project:projectId}, { session });
     // Get all notes associated with the project to be deleted or with any of the subsections to be deleted
     const notes = await Note.find({project: projectId}, null, { session });
     // Extract the ids of these notes

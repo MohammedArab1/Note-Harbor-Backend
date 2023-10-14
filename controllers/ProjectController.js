@@ -2,12 +2,6 @@ import { Project } from "../database/models/project.js";
 import { generateAccessCode } from "../utils/Generators.js";
 import mongoose from "mongoose";
 import { deleteProjectService } from "./service/projectService.js";
-import { User } from "../database/models/user.js";
-import { SubSection } from "../database/models/subSection.js";
-import { Tag } from "../database/models/tag.js";
-import { Source } from "../database/models/source.js";
-import { Note } from "../database/models/note.js";
-import { Comment } from "../database/models/comment.js";
 
 
 export const createProject = async (req,res) => {
@@ -80,7 +74,6 @@ export const addMemberToProject = async (req,res) => {
 }
 
 export const deleteProject = async (req,res) => {
-  //Will also have to delete all notes, subsections, sources, and tags associated with this project (put this in middleware though)
   const projectId = req.params.projectId
   const session = await mongoose.startSession();
 	session.startTransaction();

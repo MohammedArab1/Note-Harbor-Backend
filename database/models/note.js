@@ -1,5 +1,15 @@
 import mongoose from 'mongoose';
 
+const SourceSchema = new mongoose.Schema({
+	source: {
+		type: String,
+		required: true,
+	},
+	additionalSourceInformation: {
+		type: String,
+	},
+});
+
 const NoteSchema = new mongoose.Schema({
 	project: {
 		type: mongoose.Schema.Types.ObjectId,
@@ -26,6 +36,11 @@ const NoteSchema = new mongoose.Schema({
     dateUpdated: {
         type: Date,
     },
+	sources: {
+		type: [SourceSchema],
+		default: [],
+		required: false
+	},
 });
 
 //Middleware that makes sure that only one of the two following fields is populated: project, subsection
