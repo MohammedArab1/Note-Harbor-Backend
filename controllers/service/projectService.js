@@ -2,7 +2,6 @@ import { Project } from "../../database/models/project.js";
 import { User } from "../../database/models/user.js";
 import { SubSection } from "../../database/models/subSection.js";
 import { Tag } from "../../database/models/tag.js";
-import { Source } from "../../database/models/source.js";
 import { Note } from "../../database/models/note.js";
 import { Comment } from "../../database/models/comment.js";
 import { deleteSubSectionService } from "./subSectionService.js";
@@ -26,8 +25,6 @@ export const deleteProjectService = async (projectId, session) => {
     await deleteSubSectionService(subSectionIds, session);
     //then have to delete the appropriate tags
     await Tag.deleteMany({project:projectId}, { session });
-    //then have to delete the appropriate sources
-    // await Source.deleteMany({project:projectId}, { session });
     // Get all notes associated with the project to be deleted or with any of the subsections to be deleted
     const notes = await Note.find({project: projectId}, null, { session });
     // Extract the ids of these notes

@@ -5,7 +5,6 @@ import LoginRouter from './routes/LoginRouter.js'
 import ProjectRouter from './routes/ProjectRouter.js'
 import SubSectionRouter from './routes/SubSectionRouter.js'
 import NoteRouter from './routes/NoteRouter.js'
-import SourceRouter from './routes/SourceRouter.js'
 import TagRouter from './routes/TagRouter.js'
 import CommentRouter from './routes/CommentRouter.js'
 import connectToDb from './database/connect.js'
@@ -28,7 +27,6 @@ app.use('/api/login', LoginRouter)
 app.use('/api/project', ProjectRouter)
 app.use('/api/subsection', SubSectionRouter)
 app.use('/api/note', NoteRouter)
-app.use('/api/source', SourceRouter)
 app.use('/api/tag', TagRouter)
 app.use('/api/comment', CommentRouter)
 app.use(errorHandler)
