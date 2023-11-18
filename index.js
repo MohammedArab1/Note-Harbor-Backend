@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import path from 'path'
 import UserRouter from './routes/UserRouter.js'
 import LoginRouter from './routes/LoginRouter.js'
 import ProjectRouter from './routes/ProjectRouter.js'
@@ -15,11 +16,18 @@ import errorHandler from './middleware/ErrorHandler.js'
 const app = express()
 app.use(express.json())
 app.use(cors())
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, './dist')));
+
 app.use(
   expressjwt({
     secret: process.env.SECRET,algorithms: ["HS256"],getToken: getTokenFromHeader
   }).unless({ 
-    path: ["/api/user/register","/api/login"],
+    path: [
+      "/api/user/register",
+      "/api/login",
+      { url: /^\/(?!api).*/ }
+    ],
   })
 )
 app.use('/api/user', UserRouter)
@@ -32,6 +40,9 @@ app.use('/api/comment', CommentRouter)
 app.use(errorHandler)
 
 
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, './dist/index.html'));
+});
 
 const PORT = process.env.PORT || 3001
 try {

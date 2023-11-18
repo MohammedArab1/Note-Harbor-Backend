@@ -10,5 +10,13 @@ export const createComment = async (req, res) => {
         note
     });
 	await newComment.save();
-	res.status(201).json(newComment);
+	const populatedComment = await Comment.findById(newComment._id).populate('user').populate('inReplyTo').populate('note');
+	res.status(201).json(populatedComment);
 };
+
+
+export const fetchCommentsPerNoteId = async (req, res) => {
+    const { noteId } = req.params;
+	const comments = await Comment.find({ note:noteId }).populate('user').populate('inReplyTo').populate('note');
+	res.status(200).json(comments);
+}
