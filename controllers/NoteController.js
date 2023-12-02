@@ -1,9 +1,10 @@
 import { mongoose } from 'mongoose';
 import { Note } from '../database/models/note.js';
 import { deleteNoteService } from './service/noteService.js';
+import { Tag } from '../database/models/tag.js';
 
 export const createNote = async (req, res) => {
-	const { projectId,subSectionId, content, sources } = req.body;
+	const { projectId,subSectionId, content, sources, tags } = req.body;
 	const userId = req.auth.id;
 	//One of either project or subsection must be provided, the other will be null
 	const note = new Note({
@@ -15,6 +16,18 @@ export const createNote = async (req, res) => {
 	});
 	await note.save().then(t => t.populate('user')).then(t => t);
 
+	if (tags && Array.isArray(tags)) {
+        // Use the '$addToSet' operator to add the note id to the 'notes' field of each tag
+        // This will also ensure that the 'notes' field does not contain duplicate note ids
+        await Promise.all(tags.map(tag =>
+            Tag.updateOne(
+                { name: tag },
+                { $addToSet: { notes: savedNote._id } },
+                { upsert: true }  // Create a new document if no documents match the filter
+            )
+        ));
+    }
+	
 	res.status(201).json(note);
 };
 

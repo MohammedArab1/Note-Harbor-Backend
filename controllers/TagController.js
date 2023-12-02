@@ -33,3 +33,21 @@ export const deleteTagByTagId = async (req,res) => {
 		return res.status(500).json({ error:error.message });
 	}
 }
+
+export const updateTagNotes = async (req,res) => {
+	try {
+		const { note } = req.body;
+		const tagId = req.params.tagId
+		const updatedTag = await Tag.findByIdAndUpdate(
+            tagId,
+            { $push: { notes: note } },
+            { new: true, useFindAndModify: false }
+        );
+		if (!updatedTag) {
+            return res.status(404).json({ error: 'Tag not found' });
+        }
+		res.status(200).json(updatedTag);
+	} catch (error) {
+		return res.status(500).json({ error:error.message });
+	}
+}
