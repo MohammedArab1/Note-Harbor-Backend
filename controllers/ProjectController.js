@@ -60,6 +60,9 @@ export const addMemberToProject = async (req,res) => {
   else if (!newMemberId) {
     return res.status(400).json({ error:"Could not add user to Project, no member to add provided" })
   }
+  else if (project.private){
+    return res.status(400).json({ error:"Project is private, cannot add user to Project" })
+  }
   const projectBeforeAdding = project.members.length
   try {
     project.members.addToSet(newMemberId)
