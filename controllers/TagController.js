@@ -17,7 +17,7 @@ export const createTag = async (req, res) => {
 export const findTagsPerProjectId = async (req,res) => {
 	try {
 		const projectId = req.params.projectId
-		const tags = await Tag.find({ project: projectId})
+		const tags = await Tag.find({ project: projectId}).populate('notes')
 		return res.status(200).send({tags})
 	} catch (error) {
 		return res.status(500).json({ error:error.message });

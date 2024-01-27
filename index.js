@@ -26,7 +26,7 @@ app.use(
     path: [
       "/api/user/register",
       "/api/login",
-      { url: /^\/(?!api).*/ }
+      { url: /^\/(?!api).*/ } //this was added when I made the backend serve the frontend dist folder.
     ],
   })
 )

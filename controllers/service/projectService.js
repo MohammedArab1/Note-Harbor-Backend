@@ -16,7 +16,7 @@ export const deleteProjectService = async (projectId, session) => {
     }
 
     //First have to update the projects array in the User model to no longer hold this project
-    await User.updateOne({ projects: { $in: projectId } }, { $pull: { projects: { $in: projectId } } }, { session });
+    await User.updateOne({ projects: { $in: [projectId] } }, { $pull: { projects: { $in: [projectId] } } }, { session });
     //Then have to fetch all subsections to be deleted
     const subsections = await SubSection.find({project:projectId},null, { session });
     // Extract the ids of these subsections. Will be used later

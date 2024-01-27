@@ -7,7 +7,7 @@ export const login = async (req,res) => {
   const existingUser = await User.findOne({email}).select('+password')
   const passwordCorrect = existingUser===null ? false : await bcrypt.compare(password, existingUser.password)
   if (!existingUser || !passwordCorrect) {
-    return res.status(401).json({error:'invalid username or password'})
+    return res.status(401).json({error:'Invalid username or password'})
   }
 
   const token = createToken(existingUser)
