@@ -2,6 +2,7 @@ import { mongoose } from 'mongoose';
 import { Note } from '../database/models/note.js';
 import { deleteNoteService } from './service/noteService.js';
 import { Tag } from '../database/models/tag.js';
+import { findTagsPerProjectId } from './TagController.js';
 
 export const createNote = async (req, res) => {
 	const { projectId,subSectionId, content, sources, tags } = req.body;
@@ -76,7 +77,14 @@ export const getNotesByProjectAndSubsections = async (req, res) => {
 				{ subSection: { $in: subsectionIds } }
 			]
 		}).populate('user');
-		return res.status(200).send(notes);
+		const tags = await Tag.find({ project: projectId});
+		const noteObjects = notes.map(note => note.toObject());
+		noteObjects.forEach(noteObject => {
+			noteObject.tags = tags.filter(tag => tag.notes.some(noteId => {
+				return noteId.equals(noteObject._id)
+			}))
+		})
+		return res.status(200).send(noteObjects);
 	} catch (error) {
 		return res.status(500).json({ error: error.message });
 	}
