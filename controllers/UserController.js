@@ -23,7 +23,6 @@ export const createUser = async (req, res) => {
 	newUser = newUser.toObject();
 	delete newUser.password;
 	const token = createToken(newUser);
-	console.log('in create regular user, newUser is: ', newUser);
 	res.status(200).send({ registerSuccess: 'success', token, newUser });
 };
 
