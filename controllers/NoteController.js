@@ -1,11 +1,10 @@
 import { mongoose } from 'mongoose';
 import { Note } from '../database/models/note.js';
-import { deleteNoteService } from './service/noteService.js';
 import { Tag } from '../database/models/tag.js';
-import { findTagsPerProjectId } from './TagController.js';
+import { deleteNoteService } from './service/noteService.js';
 
 export const createNote = async (req, res) => {
-	const { projectId,subSectionId, content, sources, tags } = req.body;
+	const { projectId, subSectionId, content, sources, tags } = req.body;
 	const userId = req.auth.id;
 	//One of either project or subsection must be provided, the other will be null
 	const note = new Note({
@@ -15,21 +14,13 @@ export const createNote = async (req, res) => {
 		content,
 		sources: sources || [],
 	});
-	await note.save().then(t => t.populate('user')).then(t => t);
+	await note
+		.save()
+		.then((t) => t.populate('user'))
+		.then((t) => t);
+	const updatedNoteWithTags = await updateTags(tags,note)
 
-	if (tags && Array.isArray(tags)) {
-        // Use the '$addToSet' operator to add the note id to the 'notes' field of each tag
-        // This will also ensure that the 'notes' field does not contain duplicate note ids
-        await Promise.all(tags.map(tag =>
-            Tag.updateOne(
-                { name: tag },
-                { $addToSet: { notes: savedNote._id } },
-                { upsert: true }  // Create a new document if no documents match the filter
-            )
-        ));
-    }
-	
-	res.status(201).json(note);
+	res.status(201).json(updatedNoteWithTags);
 };
 
 export const deleteNote = async (req, res) => {
@@ -61,7 +52,9 @@ export const getNoteByProjectId = async (req, res) => {
 export const getNoteBySubSectionId = async (req, res) => {
 	const { subSectionId } = req.params;
 	try {
-		const notes = await Note.find({ subSection: subSectionId }).populate('user');
+		const notes = await Note.find({ subSection: subSectionId }).populate(
+			'user'
+		);
 		return res.status(200).send(notes);
 	} catch (error) {
 		return res.status(500).json({ error: error.message });
@@ -72,36 +65,65 @@ export const getNotesByProjectAndSubsections = async (req, res) => {
 	const { projectId, subsectionIds } = req.body;
 	try {
 		const notes = await Note.find({
-			$or: [
-				{ project: projectId },
-				{ subSection: { $in: subsectionIds } }
-			]
+			$or: [{ project: projectId }, { subSection: { $in: subsectionIds } }],
 		}).populate('user');
-		const tags = await Tag.find({ project: projectId});
-		const noteObjects = notes.map(note => note.toObject());
-		noteObjects.forEach(noteObject => {
-			noteObject.tags = tags.filter(tag => tag.notes.some(noteId => {
-				return noteId.equals(noteObject._id)
-			}))
-		})
+		const tags = await Tag.find({ project: projectId });
+		const noteObjects = notes.map((note) => note.toObject());
+		noteObjects.forEach((noteObject) => {
+			noteObject.tags = tags.filter((tag) =>
+				tag.notes.some((noteId) => {
+					return noteId.equals(noteObject._id);
+				})
+			);
+		});
 		return res.status(200).send(noteObjects);
 	} catch (error) {
 		return res.status(500).json({ error: error.message });
 	}
 };
 
-
 export const updateNoteByNoteId = async (req, res) => {
 	const { noteId } = req.params;
-	const { content, sources } = req.body;
+	const { content, sources, tags } = req.body.noteObject;
+
 	try {
-		const updatedNote = await Note.findOneAndUpdate(
-			{ _id: noteId },
-			{ $set: { content, sources } },
+		const updatedNote = await Note.findByIdAndUpdate(
+			noteId,
+			{ $set: { content, sources, dateUpdated: Date.now() } },
 			{ new: true }
+		).then((t) => t.populate('user'));
+		// Remove note id from all tags that currently have it
+		await Tag.updateMany(
+			{ notes: updatedNote._id },
+			{ $pull: { notes: updatedNote._id } }
 		);
-		return res.status(200).send(updatedNote);
+		const updatedNoteWithTags = await updateTags(tags,updatedNote)
+		return res.status(200).send(updatedNoteWithTags);
 	} catch (error) {
 		return res.status(500).json({ error: error.message });
 	}
 };
+
+const updateTags = async (tags,note) => {
+	// If there are tags, add the note id to the 'notes' field of each tag
+	if (tags && Array.isArray(tags) && tags.length > 0) {
+		// Use the '$addToSet' operator to add the note id to the 'notes' field of each tag
+		// This will also ensure that the 'notes' field does not contain duplicate note ids
+		await Promise.all(
+			tags.map((tag) => {
+				return Tag.updateOne(
+					{ _id: tag },
+					{ $addToSet: { notes: note._id } },
+					{ upsert: true } // Create a new document if no documents match the filter
+				)
+			}
+			)
+		);
+	}
+	const updatedTags = await Tag.find({ _id: { $in: tags } });
+	const updatedNoteWithTags = {
+		...note.toObject(),
+		tags: updatedTags
+	};
+	return updatedNoteWithTags
+}

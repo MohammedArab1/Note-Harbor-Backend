@@ -40,7 +40,7 @@ export const updateTagNotes = async (req,res) => {
 		const tagId = req.params.tagId
 		const updatedTag = await Tag.findByIdAndUpdate(
             tagId,
-            { $push: { notes: note } },
+            { $addToSet: { notes: note } },
             { new: true, useFindAndModify: false }
         );
 		if (!updatedTag) {
