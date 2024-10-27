@@ -2,7 +2,7 @@ import { app } from './app.js';
 import connectToDb from './database/connect.js';
 import { error } from './utils/logger.js';
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3006;
 try {
 	app.listen(PORT, () => {
 		`Server running on port ${PORT}`;
