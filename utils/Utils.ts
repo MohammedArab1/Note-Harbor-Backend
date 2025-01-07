@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-export const isTokenExpired = (token) => {
+export const isTokenExpired = (token:string) => {
   try {
     jwt.verify(token,process.env.SECRET)
     return false

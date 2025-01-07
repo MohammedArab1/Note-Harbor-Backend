@@ -1,5 +1,4 @@
 import { app } from './app.js';
-import connectToDb from './database/connect.js';
 import { error } from './utils/logger.js';
 
 const PORT = process.env.PORT || 3006;

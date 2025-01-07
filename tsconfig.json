@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+      "outDir": "./built",
+      "esModuleInterop": true,
+      "allowJs": true,
+      "target": "ES6",
+      "moduleResolution": "nodenext",
+      "module": "NodeNext",
+      "noEmitOnError": true,
+      "noImplicitAny": true,
+      // "allowImportingTsExtensions": true,
+      // "noEmit": true
+    },
+    "include": ["./**/*"]
+  }

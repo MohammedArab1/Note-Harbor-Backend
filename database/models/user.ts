@@ -1,4 +1,14 @@
-import mongoose from "mongoose"
+import mongoose, {Types} from "mongoose"
+
+export interface IUser {
+  _id: Types.ObjectId
+  firstName: string;
+  lastName: string;
+  password?: string;
+  authProvider?: string;
+  email: string;
+  projects: Types.ObjectId
+}
 
 const UserSchema = new mongoose.Schema({
   firstName: { 
@@ -22,10 +32,10 @@ const UserSchema = new mongoose.Schema({
   email: {
       type: String,
       required: [true, "An Email is required. Please provide an email."],
-      unique: [true, "The email you've provided already exists."],
+      unique: true,
       trim: true,
       validate: {
-          validator: function (email) {
+          validator: function (email:string) {
             const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
             return regex.test(email);
           },

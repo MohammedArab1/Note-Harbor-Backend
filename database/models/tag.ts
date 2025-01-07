@@ -1,4 +1,12 @@
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
+
+export interface ITag {
+	_id: Types.ObjectId
+	project: Types.ObjectId;
+	tagName: string;
+	notes?: Types.ObjectId[];
+	colour: string;
+  }
 
 const TagSchema = new mongoose.Schema({
 	project: {

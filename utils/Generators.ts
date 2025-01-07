@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
+import {Request} from 'express'
+import { IUser } from "../database/models/user.js";
 
-export const createToken = (user) => {
+export const createToken = (user: IUser): string => {
   const userForToken = {
     email:user.email,
     id:user._id
@@ -9,7 +11,7 @@ export const createToken = (user) => {
   return token
 }
 
-export const getTokenFromHeader = (request) => {
+export const getTokenFromHeader = (request: Request):string => {
   const authorization = request.get('authorization')
   if (authorization && authorization.startsWith('Bearer ')) {
     return authorization.replace('Bearer ', '')
@@ -18,7 +20,7 @@ export const getTokenFromHeader = (request) => {
 }
 
 
-export const generateAccessCode = () => {
+export const generateAccessCode = (): string => {
   var length = 12,
       charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
       retVal = "";
