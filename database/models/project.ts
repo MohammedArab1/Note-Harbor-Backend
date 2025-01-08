@@ -47,7 +47,7 @@ const ProjectSchema = new mongoose.Schema({
 });
 
 
-ProjectSchema.pre('save', async function (next) {
+ProjectSchema.pre('save', async function (this:any,next) {
   const thisMembers = this.members;
   const oldProjectMembers = await this.constructor.findById(this._id).members;
   if (this.isNew) {
@@ -59,13 +59,13 @@ ProjectSchema.pre('save', async function (next) {
   next();
 });
 
-ProjectSchema.post('save', async function (doc, next) {
+ProjectSchema.post('save', async function (this:any,doc, next) {
   const User = mongoose.model('User');
   
   // Users who joined the project
-  const usersJoined = this.members.filter(m => !this._oldMembers.includes(m));
+  const usersJoined = this.members.filter((m:any) => !this._oldMembers.includes(m));
   // Users who left the project
-  const usersLeft = this._oldMembers.filter(m => !this.members.includes(m));
+  const usersLeft = this._oldMembers.filter((m:any) => !this.members.includes(m));
 
   if (usersJoined.length > 0) {
     await User.updateMany(

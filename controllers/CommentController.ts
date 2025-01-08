@@ -1,7 +1,9 @@
 import { Comment } from '../database/models/comment.js';
+import { Request, Response } from 'express';
 
-export const createComment = async (req, res) => {
+export const createComment = async (req: Request, res: Response) => {
 	const { content, inReplyTo, note } = req.body;
+	req.headers.
     const userId = req.auth.id;
 	const newComment = new Comment({
 		user:userId,
