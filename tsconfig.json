@@ -8,8 +8,10 @@
       "module": "NodeNext",
       "noEmitOnError": true,
       "noImplicitAny": true,
+      "strict": true
       // "allowImportingTsExtensions": true,
       // "noEmit": true
     },
-    "include": ["./**/*"]
+    "include": ["./**/*"],
+    "files":["types.d.ts"]
   }

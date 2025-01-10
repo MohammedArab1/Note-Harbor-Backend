@@ -1,10 +1,5 @@
-import mongoose, { SchemaDefinitionType, Types } from 'mongoose';
-
-export interface ISource {
-	_id: Types.ObjectId;
-	source: string;
-	additionalSourceInformation: string;
-}
+import mongoose, { Document, InferSchemaType, SchemaDefinitionType, Types } from 'mongoose';
+import { INote } from '../../types.js';
 
 const SourceSchema = new mongoose.Schema({
 	source: {
@@ -16,18 +11,7 @@ const SourceSchema = new mongoose.Schema({
 	},
 });
 
-export interface INote {
-	_id: Types.ObjectId;
-	project?: Types.ObjectId;
-	subSection?: Types.ObjectId;
-	user: Types.ObjectId;
-	content: string;
-	dateCreated: Date;
-	dateUpdated?: Date;
-	sources?: ISource[];
-}
-
-const NoteSchema = new mongoose.Schema({
+const NoteSchema = new mongoose.Schema<INote>({
 	project: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Project',

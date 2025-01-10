@@ -1,18 +1,7 @@
 import mongoose, { Types } from 'mongoose';
+import { IProject } from '../../types.js';
 
-export interface IProject {
-	_id: Types.ObjectId
-	members?: Types.ObjectId[];
-	creationDate: Date;
-	accessCode: string;
-	leader: Types.ObjectId;
-  projectName: string;
-	description?: string;
-	private: boolean;
-}
-
-
-const ProjectSchema = new mongoose.Schema({
+const ProjectSchema = new mongoose.Schema<IProject>({
   members: [
     {
       type: mongoose.Schema.Types.ObjectId,

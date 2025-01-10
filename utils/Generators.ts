@@ -1,13 +1,17 @@
 import jwt from "jsonwebtoken";
 import {Request} from 'express'
-import { IUser } from "../database/models/user.js";
+import { IUser } from "../types.js";
 
-export const createToken = (user: IUser): string => {
+export const createToken = (user: IUser): string | Error => {
   const userForToken = {
     email:user.email,
     id:user._id
   }
-  const token = jwt.sign(userForToken, process.env.SECRET,{expiresIn:60*60})
+  const secret = process.env.SECRET
+  if (secret == null) {
+    return new Error("Secret cannot be retrieved from env variable.")
+  }
+  const token = jwt.sign(userForToken, secret,{expiresIn:60*60})
   return token
 }
 
@@ -16,7 +20,7 @@ export const getTokenFromHeader = (request: Request):string => {
   if (authorization && authorization.startsWith('Bearer ')) {
     return authorization.replace('Bearer ', '')
   }
-  return null
+  throw new Error("Unable to get token from header")
 }
 
 

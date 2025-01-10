@@ -1,16 +1,7 @@
 import mongoose, {Types} from "mongoose"
+import { IUser } from "../../types.js";
 
-export interface IUser {
-  _id: Types.ObjectId
-  firstName: string;
-  lastName: string;
-  password?: string;
-  authProvider?: string;
-  email: string;
-  projects: Types.ObjectId
-}
-
-const UserSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema<IUser>({
   firstName: { 
     type: String, 
     required: true

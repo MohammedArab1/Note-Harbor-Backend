@@ -1,14 +1,7 @@
 import mongoose, { Types } from 'mongoose';
+import { ITag } from '../../types.js';
 
-export interface ITag {
-	_id: Types.ObjectId
-	project: Types.ObjectId;
-	tagName: string;
-	notes?: Types.ObjectId[];
-	colour: string;
-  }
-
-const TagSchema = new mongoose.Schema({
+const TagSchema = new mongoose.Schema<ITag>({
 	project: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Project',

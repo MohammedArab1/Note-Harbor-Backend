@@ -3,7 +3,6 @@ import { Request, Response } from 'express';
 
 export const createComment = async (req: Request, res: Response) => {
 	const { content, inReplyTo, note } = req.body;
-	req.headers.
     const userId = req.auth.id;
 	const newComment = new Comment({
 		user:userId,
@@ -17,7 +16,7 @@ export const createComment = async (req: Request, res: Response) => {
 };
 
 
-export const fetchCommentsPerNoteId = async (req, res) => {
+export const fetchCommentsPerNoteId = async (req: Request, res: Response) => {
     const { noteId } = req.params;
 	const comments = await Comment.find({ note:noteId }).populate('user').populate('inReplyTo').populate('note');
 	res.status(200).json(comments);

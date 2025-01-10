@@ -1,12 +1,7 @@
 import mongoose, { Types } from 'mongoose';
+import { ISubSection } from '../../types.js';
 
-export interface ISubSection {
-	_id: Types.ObjectId
-	project: Types.ObjectId;
-	notes: Types.ObjectId[];
-	description?: string;
-  }
-const SubSectionSchema = new mongoose.Schema({
+const SubSectionSchema = new mongoose.Schema<ISubSection>({
   project: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Project',

@@ -1,16 +1,7 @@
 import mongoose, { Types } from 'mongoose';
+import { IComment } from '../../types.js';
 
-export interface IComment {
-	_id: Types.ObjectId;
-	user: Types.ObjectId;
-	content: string;
-	inReplyTo: Types.ObjectId;
-  dateCreated: Date;
-	dateUpdated?: Date;
-  note: Types.ObjectId;
-}
-
-const CommentSchema = new mongoose.Schema({
+const CommentSchema = new mongoose.Schema<IComment>({
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User',
