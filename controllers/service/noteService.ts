@@ -4,7 +4,7 @@ import { Comment } from "../../database/models/comment.js";
 import { ClientSession } from "mongoose";
 
 //Method used to delete a note. cleans up all the comments, tags, and sources associated with the note
-export const deleteNoteService = async (noteIds: string[], session: ClientSession) => {
+export const deleteNoteService = async (noteIds: string[],session: ClientSession,) => {
     try {
 		//Have to delete appropriate comments first
 		await Comment.deleteMany({note: { $in: noteIds}}, { session });

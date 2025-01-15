@@ -1,5 +1,5 @@
+import { ClientSession, Mongoose } from "mongoose";
 import { ErrorPayload } from "../types.js";
-import { Document, Mongoose } from "mongoose";
 
 export const createError = (message: string): ErrorPayload => {
   return {
@@ -7,11 +7,11 @@ export const createError = (message: string): ErrorPayload => {
   }
 }
 
-export async function transact(client:Mongoose, callback: ()=> void) {
+export async function transact(client:Mongoose, callback: (session:ClientSession) => void) {
   const session = await client.startSession()
   session.startTransaction();
 	try {
-		callback()
+		callback(session)
 		await session.commitTransaction();
 		session.endSession();
 		// return res.status(200).send(deletedNote);
@@ -19,7 +19,7 @@ export async function transact(client:Mongoose, callback: ()=> void) {
 		await session.abortTransaction();
 		session.endSession();
 		// return res.status(500).json({ error });
-    throw error
+        throw error
 	}
 
 } 
