@@ -2,9 +2,11 @@ import { Project } from "../database/models/project.js";
 import { generateAccessCode } from "../utils/Generators.js";
 import mongoose from "mongoose";
 import { deleteProjectService } from "./service/projectService.js";
+import { Request, Response } from 'express';
+import { createError } from "../utils/Utils.js";
 
 
-export const createProject = async (req,res) => {
+export const createProject = async (req: Request, res: Response) => {
   const {projectName, description, isPrivate} = req.body;
   const userId = req.auth.id
   var accessCode = generateAccessCode()
@@ -26,36 +28,36 @@ export const createProject = async (req,res) => {
     await newProject.save()
     return res.status(200).send(newProject)
   } catch (error) {
-    return res.status(500).json({ error:error.message });
+    return res.status(500).json(createError("Error creating project"));
   }
 }
 
-export const findProjectsPerUserId = async (req,res) => {
+export const findProjectsPerUserId = async (req: Request, res: Response) => {
   try {
     const userId = req.auth.id
-    const project = await Project.find({ members: userId}).populate('members').populate('leader')
-    return res.status(200).send({project})
+    const projects = await Project.find({ members: userId}).populate('members').populate('leader')
+    res.status(200).send(projects)
   } catch (error) {
-    return res.status(500).json({ error:error.message });
+      res.status(500).json(createError("Error finding project per user ID"));
   }
 }
 
-export const findProjectById = async (req,res) => {
+export const findProjectById = async (req: Request, res: Response) => {
   try {
     const userId = req.auth.id
     const projectId = req.params.projectId
     const project = await Project.findById(projectId).populate('members').populate('leader')
-    const projectMemberIds = project.members.map(member => member._id.toString())
-    if (!projectMemberIds.includes(userId)){
+    const projectMemberIds = project?.members?.map(member => member._id.toString())
+    if (projectMemberIds && !projectMemberIds.includes(userId)){
       return res.status(401).json({ error:"User is not a member of this project." })
     }
     return res.status(200).send({project})
   } catch (error) {
-    return res.status(500).json({ error:error.message });
+    return res.status(500).json(createError("Error finding project by ID"));
   }
 }
 
-export const addMemberToProject = async (req,res) => {
+export const addMemberToProject = async (req: Request, res: Response) => {
   const {accessCode} = req.body
   const newMemberId = req.auth.id
   const project = await Project.findOne({accessCode:accessCode})
@@ -68,20 +70,26 @@ export const addMemberToProject = async (req,res) => {
   else if (project.private){
     return res.status(400).json({ error:"Project is private, cannot add user to Project" })
   }
-  const projectBeforeAdding = project.members.length
+  const projectBeforeAdding = project?.members?.length
   try {
-    project.members.addToSet(newMemberId)
-    if(projectBeforeAdding === project.members.length) {
+    Project.updateOne(
+      {_id:project._id},
+      {
+        $addToSet: {members:newMemberId}
+      },
+    )
+    // project.members?.addToSet(newMemberId)
+    if(projectBeforeAdding === project.members?.length) {
       throw new Error('User is already registered to Project!');
     }
     await project.save()
     return res.status(200).send(project)
   } catch (error) {
-    return res.status(500).json({ error:error.message });
+    return res.status(500).json(createError("Error adding member to project"));
   }
 }
 
-export const deleteProject = async (req,res) => {
+export const deleteProject = async (req: Request, res: Response) => {
   const projectId = req.params.projectId
   const session = await mongoose.startSession();
 	session.startTransaction();
@@ -93,18 +101,22 @@ export const deleteProject = async (req,res) => {
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
-    return res.status(500).json({ error:error.message });
+    return res.status(500).json(createError("Error deleting project"));
   }
 }
 
-export const updateProject = async (req,res) => {
+export const updateProject = async (req: Request, res: Response) => {
   var oldProject = await Project.findById(req.params.projectId)
   try{
-    Object.assign(oldProject, req.body);
-    await oldProject.save();
-    res.status(200).json(oldProject)
+    if (oldProject){
+      Object.assign(oldProject, req.body);
+      await oldProject.save();
+      res.status(200).json(oldProject)
+    } else {
+      throw new Error('error updating project');
+    }
   } catch (error) {
-    return res.status(500).json({ error:error.message });
+    return res.status(500).json(createError("Error updating project"));
   }
   
 }

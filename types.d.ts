@@ -89,3 +89,16 @@ export type LoginPayload = {
 export type NoteWithTags = INote & {
 	tags?: ITag[];
 };
+
+export type RegisterRequest =  {
+	firstName:string,
+	lastName:string,
+	password:string,
+	email:string
+};
+
+export type LoginRequest = {
+	email:string,
+	password:string,
+	authProvider?:string
+};

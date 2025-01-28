@@ -85,9 +85,9 @@ export function run() {
   app.use(errorHandler)
   
   
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, './dist/index.html'));
-  });
+  // app.get('*', (req, res) => {
+  //   res.sendFile(path.join(__dirname, './dist/index.html'));
+  // });
 
   try {
     app.listen(PORT, () => {
