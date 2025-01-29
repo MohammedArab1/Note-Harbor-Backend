@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npx tsc",
+    "watch": "npx tsc -w",
     "start": "node built/index.js",
     "dev": "nodemon built/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"

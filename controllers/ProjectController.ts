@@ -49,9 +49,9 @@ export const findProjectById = async (req: Request, res: Response) => {
     const project = await Project.findById(projectId).populate('members').populate('leader')
     const projectMemberIds = project?.members?.map(member => member._id.toString())
     if (projectMemberIds && !projectMemberIds.includes(userId)){
-      return res.status(401).json({ error:"User is not a member of this project." })
+      return res.status(401).json(createError("User is not a member of this project"))
     }
-    return res.status(200).send({project})
+    return res.status(200).send(project)
   } catch (error) {
     return res.status(500).json(createError("Error finding project by ID"));
   }
