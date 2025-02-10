@@ -1,5 +1,8 @@
 import express from 'express';
-import { createComment, fetchCommentsPerNoteId } from '../controllers/CommentController.js';
+import {
+	createComment,
+	fetchCommentsPerNoteId,
+} from '../controllers/CommentController.js';
 
 const CommentRouter = express.Router();
 
@@ -17,6 +20,6 @@ CommentRouter.get('/note/:noteId', async (req, res, next) => {
 	} catch (error) {
 		next(error);
 	}
-})
+});
 
 export default CommentRouter;

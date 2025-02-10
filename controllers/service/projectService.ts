@@ -5,9 +5,10 @@ import { Tag } from "../../database/models/tag.js";
 import { Note } from "../../database/models/note.js";
 import { Comment } from "../../database/models/comment.js";
 import { deleteSubSectionService } from "./subSectionService.js";
+import { ClientSession } from "mongoose";
 
 //method used to delete a project. cleans up all the subsections, notes, comments, tags, and sources associated with the project
-export const deleteProjectService = async (projectId, session) => {
+export const deleteProjectService = async (projectId: string, session: ClientSession) => {
   try {
     //First make sure that project exists
     const project = await Project.findOne({ _id: projectId },null,{ session});
@@ -37,6 +38,6 @@ export const deleteProjectService = async (projectId, session) => {
     const deletedProject = await Project.deleteOne({_id:projectId}, {session})
     return deletedProject 
   } catch (error) {
-    throw new Error(error)
+    throw error
   }
 }

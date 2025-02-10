@@ -1,9 +1,10 @@
 import { SubSection } from "../../database/models/subSection.js";
 import { Note } from "../../database/models/note.js";
 import { Comment } from "../../database/models/comment.js";
+import { ClientSession } from "mongoose";
 
 //Method used to delete a subsection. cleans up all the notes and comments associated with the subsection
-export const deleteSubSectionService = async (subSectionIds, session) => {
+export const deleteSubSectionService = async (subSectionIds: string[], session: ClientSession) => {
     try {
         //Find all the notes that have this subsection in the subsection field
         const notes = await Note.find( {subSection: { $in: subSectionIds }}, null, { session });
@@ -16,6 +17,6 @@ export const deleteSubSectionService = async (subSectionIds, session) => {
         const deletedSubsections = await SubSection.deleteMany({ _id: { $in: subSectionIds }}, { session });
         return deletedSubsections
     } catch (error) {
-        throw new Error(error)
+        throw error
     }
 }

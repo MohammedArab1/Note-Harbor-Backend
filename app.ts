@@ -18,40 +18,6 @@ import connectToDb from './database/connect.js'
 dotenv.config()
 connectToDb();
 
-// export const app = express()
-// app.use(express.json())
-// app.use(cors())
-// const __dirname = path.resolve();
-// app.use(requestLogger)
-// app.use(express.static(path.join(__dirname, './dist')));
-// const secret = process.env.SECRET  
-// app.use(
-//   expressjwt({
-//     secret: process.env.SECRET,algorithms: ["HS256"],getToken: getTokenFromHeader
-//   }).unless({ 
-//     path: [
-//       "/api/user/register",
-//       "/api/login",
-//       { url: /^\/(?!api).*/ } //this was added when I made the backend serve the frontend dist folder.
-//     ],
-//   })
-// )
-// app.use('/api/user', UserRouter)
-// app.use('/api/login', LoginRouter)
-// app.use('/api/project', ProjectRouter)
-// app.use('/api/subsection', SubSectionRouter)
-// app.use('/api/note', NoteRouter)
-// app.use('/api/tag', TagRouter)
-// app.use('/api/comment', CommentRouter)
-// app.use(errorHandler)
-
-
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, './dist/index.html'));
-// });
-
-
-
 export function run() {
   const app = express()
   const PORT = process.env.PORT || 3006;

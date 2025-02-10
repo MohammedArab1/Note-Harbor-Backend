@@ -1,5 +1,12 @@
 import express from 'express';
-import { createNote, deleteNote, getNoteByProjectId, getNoteBySubSectionId, updateNoteByNoteId, getNotesByProjectAndSubsections } from '../controllers/NoteController.js';
+import {
+	createNote,
+	deleteNote,
+	getNoteByProjectId,
+	getNoteBySubSectionId,
+	getNotesByProjectAndSubsections,
+	updateNoteByNoteId,
+} from '../controllers/NoteController.js';
 
 const NoteRouter = express.Router();
 
@@ -11,7 +18,7 @@ NoteRouter.post('/', async (req, res, next) => {
 	}
 });
 
-NoteRouter.post('/allNotes',async (req, res, next) => {
+NoteRouter.post('/allNotes', async (req, res, next) => {
 	try {
 		await getNotesByProjectAndSubsections(req, res);
 	} catch (error) {
@@ -21,11 +28,11 @@ NoteRouter.post('/allNotes',async (req, res, next) => {
 
 NoteRouter.post('/deleteMany', async (req, res, next) => {
 	try {
-		await deleteNote(req,res)
+		await deleteNote(req, res);
 	} catch (error) {
 		next(error);
 	}
-})
+});
 
 NoteRouter.get('/project/:projectId', async (req, res, next) => {
 	try {
@@ -33,7 +40,7 @@ NoteRouter.get('/project/:projectId', async (req, res, next) => {
 	} catch (error) {
 		next(error);
 	}
-})
+});
 
 NoteRouter.get('/subsection/:subSectionId', async (req, res, next) => {
 	try {
@@ -41,7 +48,7 @@ NoteRouter.get('/subsection/:subSectionId', async (req, res, next) => {
 	} catch (error) {
 		next(error);
 	}
-})
+});
 
 NoteRouter.patch('/:noteId', async (req, res, next) => {
 	try {
@@ -49,6 +56,6 @@ NoteRouter.patch('/:noteId', async (req, res, next) => {
 	} catch (error) {
 		next(error);
 	}
-})
+});
 
 export default NoteRouter;
