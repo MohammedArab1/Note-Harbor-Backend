@@ -3,10 +3,11 @@ import mongoose, { ClientSession } from 'mongoose';
 import { SubSection } from '../database/models/subSection.js';
 import { createError, transact } from '../utils/Utils.js';
 import { deleteSubSectionService } from './service/subSectionService.js';
+import { ISubSection } from '../types.js';
 
 export const createSubSection = async (req: Request, res: Response) => {
-	const { projectId, name, description } = req.body;
-	const subSection = new SubSection({ project: projectId, name, description });
+	const { project, name, description }: ISubSection = req.body;
+	const subSection = new SubSection({ project: project, name, description });
 	await subSection.save();
 	res.status(201).json(subSection);
 };

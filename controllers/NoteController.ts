@@ -192,7 +192,9 @@ const updateTags = async (tags: ITag[], note: INote, session: ClientSession) => 
 	}
 	const tagIds: string[] = [];
 	for (const tag of tags) {
-		tagIds.push(tag._id.toString());
+		if (tag._id ) {
+			tagIds.push(tag._id);
+		}
 	}
 	const updatedTags = await Tag.find({ _id: { $in: tagIds } });
 

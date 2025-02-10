@@ -50,9 +50,12 @@ export const findProjectById = async (req: Request, res: Response) => {
 		const project = await Project.findById(projectId)
 			.populate('members')
 			.populate('leader');
-		const projectMemberIds = project?.members?.map((member) =>
-			member._id.toString()
-		);
+		const projectMemberIds = project?.members?.map((member) => {
+			if (typeof member === "string") {
+				return member
+			}
+			return member?._id?.toString()
+		});
 		if (projectMemberIds && !projectMemberIds.includes(userId)) {
 			return res
 				.status(401)

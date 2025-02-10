@@ -11,7 +11,7 @@ export async function transact(client:Mongoose, callback: (session:ClientSession
   const session = await client.startSession()
   session.startTransaction();
 	try {
-		callback(session)
+		await callback(session)
 		await session.commitTransaction();
 		session.endSession();
 		// return res.status(200).send(deletedNote);
