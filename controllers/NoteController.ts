@@ -105,7 +105,7 @@ export const getNotesByProjectAndSubsections = async (
 			const relevantTags = tags.filter((tag) => {
 				if (tag.notes != null) {
 					tag.notes.some((tagNote) => {
-						return tagNote._id.equals(note._id);
+						return tagNote._id === (note._id);
 					});
 				}
 			});

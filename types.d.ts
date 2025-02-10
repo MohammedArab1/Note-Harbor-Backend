@@ -1,12 +1,13 @@
 import { Types } from 'mongoose';
+
 export interface ISource {
-	_id: Types.ObjectId;
+	_id: string;
 	source: string;
 	additionalSourceInformation: string;
 }
 
 export interface INote {
-	_id: Types.ObjectId;
+	_id: string;
 	project?: Types.ObjectId | IProject;
 	subSection?: Types.ObjectId | ISubSection;
 	user: Types.ObjectId | IUser;
@@ -17,7 +18,7 @@ export interface INote {
 }
 
 export interface IComment {
-	_id: Types.ObjectId;
+	_id: string;
 	user: Types.ObjectId | IUser;
 	content: string;
 	inReplyTo: Types.ObjectId | IComment;
@@ -27,7 +28,7 @@ export interface IComment {
 }
 
 export interface IProject {
-	_id: Types.ObjectId;
+	_id: string;
 	members?: Types.ObjectId[] | IUser[];
 	creationDate: Date;
 	accessCode: string;
@@ -38,14 +39,14 @@ export interface IProject {
 }
 
 export interface ISubSection {
-	_id: Types.ObjectId;
-	project: Types.ObjectId | IProject;
+	_id: string;
+	project: number | Types.ObjectId | IProject;
 	name: string;
 	description?: string;
 }
 
 export interface ITag {
-	_id: Types.ObjectId;
+	_id: string;
 	project: Types.ObjectId | IProject;
 	tagName: string;
 	notes?: Types.ObjectId[] | INote[];
@@ -53,7 +54,7 @@ export interface ITag {
 }
 
 export interface IUser {
-	_id: Types.ObjectId;
+	_id: string;
 	firstName: string;
 	lastName: string;
 	password?: string;
