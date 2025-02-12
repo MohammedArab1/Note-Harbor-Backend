@@ -2,6 +2,9 @@ import mongoose, { Document, InferSchemaType, SchemaDefinitionType, Types } from
 import { INote } from '../../types.js';
 
 const SourceSchema = new mongoose.Schema({
+	_id:{
+		type:String,
+	},
 	source: {
 		type: String,
 		required: true,
@@ -12,17 +15,17 @@ const SourceSchema = new mongoose.Schema({
 });
 
 const NoteSchema = new mongoose.Schema<INote>({
+	_id:{
+		type:String,
+	},
 	project: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Project',
+		type:String
 	},
 	subSection: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'SubSection',
+		type:String
 	},
 	user: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'User',
+		type:String,
 		required: true,
 	},
 	content: {

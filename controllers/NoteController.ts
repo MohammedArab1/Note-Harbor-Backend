@@ -5,6 +5,7 @@ import { Tag } from '../database/models/tag.js';
 import { INote, ITag, NoteWithTags } from '../types.js';
 import { createError, transact } from '../utils/Utils.js';
 import { deleteNoteService } from './service/noteService.js';
+import { v4 } from 'uuid';
 
 const problemDeletingNote = `There was a problem deleting the note, please try again later.`;
 const problemUpdatingNote = `There was a problem updating the note, please try again later.`;
@@ -14,6 +15,7 @@ export const createNote = async (req: Request, res: Response) => {
 	const userId = req.auth.id;
 	//One of either project or subsection must be provided, the other will be null
 	const note = new Note({
+		_id: v4(),
 		project: projectId || null,
 		subSection: subSectionId || null,
 		user: userId,
@@ -27,7 +29,6 @@ export const createNote = async (req: Request, res: Response) => {
 	await transact(mongoose, async (session: ClientSession) => {
 		await note
 		.save()
-		.then((t) => t.populate('user'))
 		.then((t) => t);
 
 		updatedNoteWithTags = await updateTags((tags as ITag[]) || [], note, session);
@@ -70,7 +71,7 @@ export const deleteNote = async (req: Request, res: Response) => {
 export const getNoteByProjectId = async (req: Request, res: Response) => {
 	const { projectId } = req.params;
 	try {
-		const notes = await Note.find({ project: projectId }).populate('user');
+		const notes = await Note.find({ project: projectId });
 		return res.status(200).send(notes);
 	} catch (error) {
 		return res.status(500).json({ error });
@@ -80,9 +81,7 @@ export const getNoteByProjectId = async (req: Request, res: Response) => {
 export const getNoteBySubSectionId = async (req: Request, res: Response) => {
 	const { subSectionId } = req.params;
 	try {
-		const notes = await Note.find({ subSection: subSectionId }).populate(
-			'user'
-		);
+		const notes = await Note.find({ subSection: subSectionId })
 		return res.status(200).send(notes);
 	} catch (error) {
 		return res.status(500).json({ error });
@@ -97,21 +96,21 @@ export const getNotesByProjectAndSubsections = async (
 	try {
 		const dbNotes = await Note.find({
 			$or: [{ project: projectId }, { subSection: { $in: subsectionIds } }],
-		}).populate('user');
+		})
 		const tags = await Tag.find({ project: projectId });
 
 		const notesWithTags: NoteWithTags[] = [];
 		dbNotes.forEach((note) => {
 			const relevantTags = tags.filter((tag) => {
-				if (tag.notes != null) {
+				if (tag.notes) {
 					tag.notes.some((tagNote) => {
-						return tagNote._id === (note._id);
+						return tagNote === (note._id);
 					});
 				}
 			});
 			notesWithTags.push({
-				...note,
-				tags: relevantTags,
+				...note.toObject(),
+				tags: relevantTags
 			});
 		});
 		return res.status(200).send(notesWithTags);
@@ -132,9 +131,6 @@ export const updateNoteByNoteId = async (req: Request, res: Response) => {
 				{ $set: { content, sources, dateUpdated: Date.now() } },
 				{ new: true },
 			).then((t) => {
-				if (t != null) {
-					t.populate('user');
-				}
 				return t;
 			});
 			if (updatedNote == null) {

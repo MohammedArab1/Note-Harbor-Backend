@@ -2,10 +2,12 @@ import mongoose, { Types } from 'mongoose';
 import { IProject } from '../../types.js';
 
 const ProjectSchema = new mongoose.Schema<IProject>({
+  _id:{
+		type:String,
+	},
   members: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      type:String,
     }
   ],
   creationDate: { 
@@ -18,8 +20,7 @@ const ProjectSchema = new mongoose.Schema<IProject>({
     unique: true
   },
   leader: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    type:String,
     required: true
   },
   projectName: {

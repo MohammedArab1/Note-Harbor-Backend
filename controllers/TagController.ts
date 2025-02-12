@@ -1,12 +1,14 @@
 import { Tag } from '../database/models/tag.js';
 import { Request, Response } from 'express';
 import { createError } from '../utils/Utils.js';
+import { v4 } from 'uuid';
 
 
 export const createTag = async (req: Request, res: Response) => {
 	//todo need to add error handling here as below, and please check all other controller methods to make sure they all have error handling.
 	const { projectId, tagName, colour, notes } = req.body;
 	const newTag = new Tag({
+		_id: v4(),
 		project: projectId, 
         tagName,
 		colour,
@@ -20,7 +22,7 @@ export const createTag = async (req: Request, res: Response) => {
 export const findTagsPerProjectId = async (req: Request, res: Response) => {
 	try {
 		const projectId = req.params.projectId
-		const tags = await Tag.find({ project: projectId}).populate('notes')
+		const tags = await Tag.find({ project: projectId})
 		return res.status(200).send({tags})
 	} catch (error) {
 		return res.status(500).json(createError("Unable to find tags"));

@@ -2,9 +2,11 @@ import mongoose, { Types } from 'mongoose';
 import { IComment } from '../../types.js';
 
 const CommentSchema = new mongoose.Schema<IComment>({
+	_id:{
+		type:String,
+	},
 	user: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'User',
+		type:String,
 		required: true,
 	},
 	content: {
@@ -12,8 +14,7 @@ const CommentSchema = new mongoose.Schema<IComment>({
 		required: true,
 	},
 	inReplyTo: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Comment',
+		type:String,
 	},
 	dateCreated: {
 		type: Date,
@@ -24,8 +25,7 @@ const CommentSchema = new mongoose.Schema<IComment>({
 		type: Date,
 	},
 	note: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Note',
+		type:String,
 		required: true,
 	},
 });

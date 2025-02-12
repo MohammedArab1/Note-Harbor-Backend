@@ -4,10 +4,11 @@ import { SubSection } from '../database/models/subSection.js';
 import { createError, transact } from '../utils/Utils.js';
 import { deleteSubSectionService } from './service/subSectionService.js';
 import { ISubSection } from '../types.js';
+import { v4 } from 'uuid';
 
 export const createSubSection = async (req: Request, res: Response) => {
 	const { project, name, description }: ISubSection = req.body;
-	const subSection = new SubSection({ project: project, name, description });
+	const subSection = new SubSection({ _id:v4(),project: project, name, description });
 	await subSection.save();
 	res.status(201).json(subSection);
 };
@@ -19,7 +20,7 @@ export const deleteSubSection = async (req: Request, res: Response) => {
 		await transact(mongoose, async (session: ClientSession) => {
 			const subsection = await SubSection.findOne({ _id: subSectionId }, null, {
 				session,
-			});
+			})
 			if (!subsection) {
 				throw new Error('subsection does not exist!');
 			}

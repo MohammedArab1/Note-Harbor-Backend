@@ -2,6 +2,9 @@ import mongoose, {Types} from "mongoose"
 import { IUser } from "../../types.js";
 
 const UserSchema = new mongoose.Schema<IUser>({
+  _id:{
+		type:String,
+	},
   firstName: { 
     type: String, 
     required: true
@@ -35,8 +38,7 @@ const UserSchema = new mongoose.Schema<IUser>({
   },
   projects: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Project',
+      type: String,
       default: [],
     }
   ]

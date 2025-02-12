@@ -2,9 +2,11 @@ import mongoose, { Types } from 'mongoose';
 import { ISubSection } from '../../types.js';
 
 const SubSectionSchema = new mongoose.Schema<ISubSection>({
+  _id:{
+		type:String,
+	},
   project: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Project',
+    type:String,
     required: true
   },
   name:{

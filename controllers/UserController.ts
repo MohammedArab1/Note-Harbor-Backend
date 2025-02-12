@@ -7,6 +7,7 @@ import { LoginPayload, RegisterRequest } from '../types.js';
 import { createToken } from '../utils/Generators.js';
 import { createError, transact } from '../utils/Utils.js';
 import { deleteProjectService } from './service/projectService.js';
+import { v4 } from 'uuid';
 
 const unableToDeleteUserString =
 	'Unable to delete user. Please try again later.';
@@ -20,6 +21,7 @@ export const createUser = async (req: Request, res: Response) => {
 	const saltRounds = 10;
 	const passwordHash = await bcrypt.hash(password, saltRounds);
 	let newUser = new User({
+		_id: v4(),
 		firstName,
 		lastName,
 		password: passwordHash,

@@ -2,9 +2,11 @@ import mongoose, { Types } from 'mongoose';
 import { ITag } from '../../types.js';
 
 const TagSchema = new mongoose.Schema<ITag>({
+	_id:{
+		type:String,
+	},
 	project: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Project',
+		type:String,
 		required: true
 	},
 	tagName: {
@@ -12,8 +14,7 @@ const TagSchema = new mongoose.Schema<ITag>({
 		required: true,
 	},
 	notes: [{
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Note',
+		type: String,
 		default: [],
 	}],
 	colour: {
