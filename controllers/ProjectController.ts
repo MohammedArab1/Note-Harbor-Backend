@@ -6,7 +6,7 @@ import { createError, transact } from '../utils/Utils.js';
 import { deleteProjectService } from './service/projectService.js';
 
 export const createProject = async (req: Request, res: Response) => {
-	const { projectName, description, isPrivate } = req.body;
+	const { projectName, description, private:isPrivate } = req.body;
 	const userId = req.auth.id;
 	var accessCode = generateAccessCode();
 	var existingProject = await Project.findOne({ accessCode: accessCode });
@@ -21,13 +21,13 @@ export const createProject = async (req: Request, res: Response) => {
 		leader: userId,
 		projectName,
 		description,
-		private: isPrivate,
+		private:isPrivate,
 	});
 	try {
 		await newProject.save();
 		return res.status(200).send(newProject);
 	} catch (error) {
-		return res.status(500).json(createError('Error creating project'));
+		return res.status(500).json(createError(`Error creating project: ${error}`));
 	}
 };
 
@@ -51,10 +51,7 @@ export const findProjectById = async (req: Request, res: Response) => {
 			.populate('members')
 			.populate('leader');
 		const projectMemberIds = project?.members?.map((member) => {
-			if (typeof member === "string") {
-				return member
-			}
-			return member?._id?.toString()
+			return member
 		});
 		if (projectMemberIds && !projectMemberIds.includes(userId)) {
 			return res
